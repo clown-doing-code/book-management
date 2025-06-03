@@ -80,7 +80,7 @@ export default function AuthForm<T extends FieldValues>({
                       <FileUpload
                         type="image"
                         accept="image/*"
-                        placeholder="Upload your ID"
+                        placeholder="Sube imagen"
                         folder="ids"
                         variant="dark"
                         onFileChange={field.onChange}
