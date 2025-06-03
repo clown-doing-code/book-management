@@ -32,7 +32,7 @@ export default function BookCard({
         </div>
 
         {isLoanedBook && (
-          <div className="mt-3 w-full">
+          <div className="mt-2 w-full">
             <div className="flex flex-row items-center gap-1 max-xs:justify-center">
               <Calendar className="h-4 w-4 text-amber-100" />
               <p className="text-sm text-amber-100">11 días para devolver</p>

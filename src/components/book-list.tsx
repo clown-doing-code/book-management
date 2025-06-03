@@ -13,7 +13,7 @@ export default function BookList({ title, books, containerClassName }: Props) {
         Libros Populares
       </h2>
 
-      <ul className="mt-10 flex flex-wrap gap-5 max-xs:justify-between xs:gap-10">
+      <ul className="mt-8 flex flex-wrap gap-5 max-xs:justify-between xs:gap-10">
         {books.map((book) => (
           <BookCard key={book.title} {...book} />
         ))}

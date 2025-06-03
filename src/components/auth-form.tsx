@@ -72,7 +72,7 @@ export default function AuthForm<T extends FieldValues>({
               name={field as Path<T>}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="te capitalize">
+                  <FormLabel className="text-white capitalize">
                     {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
                   </FormLabel>
                   <FormControl>
@@ -80,7 +80,7 @@ export default function AuthForm<T extends FieldValues>({
                       <FileUpload
                         type="image"
                         accept="image/*"
-                        placeholder="Sube imagen"
+                        placeholder="Subir imagen"
                         folder="ids"
                         variant="dark"
                         onFileChange={field.onChange}
@@ -92,7 +92,7 @@ export default function AuthForm<T extends FieldValues>({
                           FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
                         }
                         {...field}
-                        className="placeholder:text-amber-100-100 min-h-14 w-full text-base font-bold text-white placeholder:font-normal"
+                        className="placeholder:text-muted-100 min-h-14 w-full text-base font-bold text-white placeholder:font-normal"
                       />
                     )}
                   </FormControl>
@@ -104,7 +104,7 @@ export default function AuthForm<T extends FieldValues>({
 
           <Button
             type="submit"
-            className="inline-flex min-h-14 w-full items-center justify-center rounded-md bg-amber-100 px-6 py-2 text-base font-bold text-black hover:bg-amber-400/90"
+            className="inline-flex min-h-14 w-full cursor-pointer items-center justify-center rounded-md bg-amber-100 px-6 py-2 text-base font-bold text-black hover:bg-amber-400/90"
           >
             {isSignIn ? "Iniciar Sesión" : "Registrarse"}
           </Button>

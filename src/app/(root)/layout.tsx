@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="bg-pattern bg-background xs:px-10 flex min-h-screen flex-1 flex-col bg-cover bg-top px-5 md:px-16">
+    <main className="bg-pattern flex min-h-screen flex-1 flex-col bg-background bg-cover bg-top px-5 xs:px-10 md:px-16">
       <div className="mx-auto max-w-7xl">
         <Header />
 
