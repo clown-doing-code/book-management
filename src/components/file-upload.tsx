@@ -1,11 +1,13 @@
 "use client";
 
+import type React from "react";
+
 import { IKImage, ImageKitProvider, IKUpload } from "imagekitio-next";
 import config from "@/lib/config";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { Upload } from "lucide-react";
+import { File, ImageIcon, Video, CheckCircle, X } from "lucide-react";
 
 const {
   env: {
@@ -59,18 +61,23 @@ const FileUpload = ({
     filePath: value ?? null,
   });
   const [progress, setProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const styles = {
     button:
       variant === "dark"
-        ? "bg-dark-300"
-        : "bg-light-600 border-gray-100 border",
-    placeholder: variant === "dark" ? "text-light-100" : "text-slate-500",
-    text: variant === "dark" ? "text-light-100" : "text-dark-400",
+        ? "bg-muted border-amber-100 "
+        : "bg-gradient-to-br from-white to-gray-50 border-gray-200 hover:from-gray-50 hover:to-gray-100",
+    placeholder: variant === "dark" ? "text-amber-100" : "text-amber-100",
+    text: variant === "dark" ? "text-white" : "text-white",
+    accent: variant === "dark" ? "text-amber-100" : "text-amber-200",
   };
 
   const onError = (error: any) => {
     console.log(error);
+    setIsUploading(false);
+    setProgress(0);
 
     toast.error(`${type} upload failed`, {
       description: `Your ${type} could not be uploaded. Please try again.`,
@@ -80,10 +87,15 @@ const FileUpload = ({
   const onSuccess = (res: any) => {
     setFile(res);
     onFileChange(res.filePath);
+    setIsUploading(false);
+    setProgress(100);
 
     toast.success(`${type} uploaded successfully`, {
       description: `${res.filePath} uploaded successfully!`,
     });
+
+    // Reset progress after a delay
+    setTimeout(() => setProgress(0), 2000);
   };
 
   const onValidate = (file: File) => {
@@ -92,7 +104,6 @@ const FileUpload = ({
         toast.error("File size too large", {
           description: "Please upload a file that is less than 20MB in size",
         });
-
         return false;
       }
     } else if (type === "video") {
@@ -103,8 +114,39 @@ const FileUpload = ({
         return false;
       }
     }
-
     return true;
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+
+    if (ikUploadRef.current) {
+      // @ts-ignore
+      ikUploadRef.current?.click();
+    }
+  };
+
+  const removeFile = () => {
+    setFile({ filePath: null });
+    onFileChange("");
+    setProgress(0);
+  };
+
+  const getFileIcon = () => {
+    if (type === "image") return <ImageIcon className="h-8 w-8" />;
+    if (type === "video") return <Video className="h-8 w-8" />;
+    return <File className="h-8 w-8" />;
   };
 
   return (
@@ -113,73 +155,166 @@ const FileUpload = ({
       urlEndpoint={urlEndpoint}
       authenticator={authenticator}
     >
-      <IKUpload
-        ref={ikUploadRef}
-        onError={onError}
-        onSuccess={onSuccess}
-        useUniqueFileName={true}
-        validateFile={onValidate}
-        onUploadStart={() => setProgress(0)}
-        onUploadProgress={({ loaded, total }) => {
-          const percent = Math.round((loaded / total) * 100);
+      <div className="w-full space-y-4">
+        <IKUpload
+          ref={ikUploadRef}
+          onError={onError}
+          onSuccess={onSuccess}
+          useUniqueFileName={true}
+          validateFile={onValidate}
+          onUploadStart={() => {
+            setProgress(0);
+            setIsUploading(true);
+          }}
+          onUploadProgress={({ loaded, total }) => {
+            const percent = Math.round((loaded / total) * 100);
+            setProgress(percent);
+          }}
+          folder={folder}
+          accept={accept}
+          className="hidden"
+        />
 
-          setProgress(percent);
-        }}
-        folder={folder}
-        accept={accept}
-        className="hidden"
-      />
-
-      <button
-        className={cn(
-          "flex min-h-14 w-full items-center justify-center gap-1.5 rounded-md",
-          styles.button,
-        )}
-        onClick={(e) => {
-          e.preventDefault();
-
-          if (ikUploadRef.current) {
-            // @ts-ignore
-            ikUploadRef.current?.click();
-          }
-        }}
-      >
-        <Upload className="h-4 w-4" />
-
-        <p className={cn("text-base", styles.placeholder)}>{placeholder}</p>
-
-        {file && (
-          <p className={cn("mt-1 text-center text-xs", styles.text)}>
-            {file.filePath}
-          </p>
-        )}
-      </button>
-
-      {progress > 0 && progress !== 100 && (
-        <div className="w-full rounded-full bg-green-200">
-          <div
-            className="rounded-full bg-green-800 p-0.5 text-center font-bebas-neue text-[8px] leading-none font-bold text-light-100"
-            style={{ width: `${progress}%` }}
-          >
-            {progress}%
-          </div>
-        </div>
-      )}
-
-      {file?.filePath && (
-        <>
-          {type === "image" && (
-            <IKImage
-              path={file.filePath}
-              width={500}
-              height={300}
-              loading={"eager"}
-              alt={file.filePath}
-              className="rounded-lg"
-            />
+        {/* Upload Button */}
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-lg border-2 border-dashed transition-all duration-300 ease-in-out",
+            styles.button,
+            isDragOver && "scale-[1.02] border-amber-400 bg-muted",
+            isUploading && "pointer-events-none",
+            file?.filePath && "border-solid",
           )}
-        </>
-      )}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <button
+            className="flex min-h-12 w-full flex-col items-center justify-center gap-2 p-3 transition-all duration-200 hover:scale-[1.01]"
+            onClick={(e) => {
+              e.preventDefault();
+              if (ikUploadRef.current && !isUploading) {
+                // @ts-ignore
+                ikUploadRef.current?.click();
+              }
+            }}
+            disabled={isUploading}
+          >
+            {/* Icon */}
+            <div
+              className={cn(
+                "flex items-center justify-center rounded-full p-2 transition-all duration-300",
+                variant === "dark" ? "bg-slate-700/50" : "bg-gray-100",
+                styles.accent,
+                isUploading && "animate-pulse",
+              )}
+            >
+              {isUploading ? (
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              ) : file?.filePath ? (
+                <CheckCircle className="h-4 w-4 text-green-500" />
+              ) : (
+                getFileIcon()
+              )}
+            </div>
+
+            <div className="space-y-0.5 text-center">
+              <p className={cn("text-sm font-medium", styles.placeholder)}>
+                {isUploading
+                  ? "Subiendo..."
+                  : file?.filePath
+                    ? "¡Subida completada!"
+                    : placeholder}
+              </p>
+              <p className={cn("text-[10px]", styles.text)}>
+                {isUploading
+                  ? "Por favor espera mientras procesamos tu archivo"
+                  : file?.filePath
+                    ? "Haz clic para subir otro archivo"
+                    : `Arrastra y suelta tu ${type} aquí, o haz clic para buscar`}
+              </p>
+            </div>
+          </button>
+
+          {/* Remove button for uploaded files */}
+          {file?.filePath && !isUploading && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                removeFile();
+              }}
+              className={cn(
+                "absolute top-2 right-2 rounded-full bg-muted p-1 text-white transition-all duration-200 hover:scale-110 hover:bg-amber-100/60",
+              )}
+            >
+              <X className="h-3 w-3" />
+            </button>
+          )}
+        </div>
+
+        {/* Enhanced Progress Bar */}
+        {progress > 0 && progress < 100 && (
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className={styles.text}>Subiendo...</span>
+              <span className={cn("font-semibold", styles.accent)}>
+                {progress}%
+              </span>
+            </div>
+            <div
+              className={cn(
+                "h-1.5 w-full overflow-hidden rounded-full",
+                variant === "dark" ? "bg-slate-700" : "bg-gray-200",
+              )}
+            >
+              <div
+                className="relative h-full overflow-hidden rounded-full bg-gradient-to-r from-amber-500 to-amber-600 transition-all duration-300 ease-out"
+                style={{ width: `${progress}%` }}
+              >
+                {/* Animated shimmer effect */}
+                <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Success Progress Bar */}
+        {progress === 100 && (
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-[10px]">
+              <span className="flex items-center gap-1 font-medium text-green-600">
+                <CheckCircle className="h-3 w-3" />
+                Subida completada
+              </span>
+              <span className="font-semibold text-green-600">100%</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-green-100">
+              <div className="h-full w-full animate-pulse rounded-full bg-gradient-to-r from-green-500 to-green-600" />
+            </div>
+          </div>
+        )}
+
+        {/* File Preview */}
+        {file?.filePath && (
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <h4 className={cn("font-medium", styles.text)}>Vista Previa</h4>
+            </div>
+
+            {type === "image" && (
+              <div className="relative max-h-32 overflow-hidden rounded-md border">
+                <IKImage
+                  path={file.filePath}
+                  width={500}
+                  height={300}
+                  loading={"eager"}
+                  alt={file.filePath}
+                  className="h-auto w-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </ImageKitProvider>
   );
 };

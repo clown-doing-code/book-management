@@ -1,3 +1,4 @@
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
@@ -16,27 +17,8 @@ export default async function AuthLayout({
     redirect("/");
   }
   return (
-    <main className="relative flex flex-col-reverse text-amber-100 sm:flex-row">
-      <section className="bg-pattern my-auto flex h-full min-h-screen flex-1 items-center bg-dark-100 bg-cover bg-top px-5 py-10">
-        <div className="gradient-vertical mx-auto flex max-w-xl flex-col gap-6 rounded-lg p-10">
-          <div className="flex flex-row gap-3">
-            <Image src="/icons/logo.svg" alt="logo" width={37} height={37} />
-            <h1 className="text-2xl font-semibold text-white">BookWise</h1>
-          </div>
-
-          <div>{children}</div>
-        </div>
-      </section>
-
-      <section className="sticky h-40 w-full sm:top-0 sm:h-screen sm:flex-1">
-        <Image
-          src="/images/auth-illustration.png"
-          alt="auth ilustration"
-          height={1000}
-          width={1000}
-          className="size-full object-cover"
-        />
-      </section>
+    <main className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-4xl">{children}</div>
     </main>
   );
 }
