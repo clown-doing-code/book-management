@@ -15,7 +15,7 @@ interface Book {
 }
 
 interface AuthCredentials {
-  fullName: string;
+  name: string;
   email: string;
   password: string;
   universityId: number;

@@ -1,6 +1,6 @@
 {
-  "id": "42c357c7-70f6-4119-b82c-39efc5f8e492",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "248b1c23-6341-49b0-ad37-db3a747fd2e8",
+  "prevId": "b025c9da-7c75-41f3-971d-3ddbd74d69ec",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -433,12 +433,6 @@
         "university_id": {
           "name": "university_id",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
           "primaryKey": false,
           "notNull": true
         },

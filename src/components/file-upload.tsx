@@ -166,15 +166,20 @@ const FileUpload = ({
         </div>
       )}
 
-      {file &&
-        (type === "image" ? (
-          <IKImage
-            alt={file.filePath}
-            path={file.filePath}
-            width={500}
-            height={300}
-          />
-        ) : null)}
+      {file?.filePath && (
+        <>
+          {type === "image" && (
+            <IKImage
+              path={file.filePath}
+              width={500}
+              height={300}
+              loading={"eager"}
+              alt={file.filePath}
+              className="rounded-lg"
+            />
+          )}
+        </>
+      )}
     </ImageKitProvider>
   );
 };

@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
 import FileUpload from "./file-upload";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type Props<T extends FieldValues> = {
   schema: ZodType<T>;
@@ -37,6 +39,7 @@ export default function AuthForm<T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: Props<T>) {
+  const router = useRouter();
   const isSignIn = type === "SIGN_IN";
 
   const form: UseFormReturn<T> = useForm({
@@ -45,7 +48,19 @@ export default function AuthForm<T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    console.log(data);
+    const result = await onSubmit(data);
+    if (result.success) {
+      toast.success("¡Bienvenido a BookWise!", {
+        description: isSignIn ? "Inicio de sesión exitoso" : "Registro exitoso",
+      });
+      router.push("/");
+    } else {
+      toast.error(`Error al ${isSignIn ? "iniciar sesión" : "registrarse"}`, {
+        description:
+          result.error ??
+          "Ocurrió un error inesperado, por favor intenta de nuevo",
+      });
+    }
   };
 
   return (

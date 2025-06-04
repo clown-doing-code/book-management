@@ -41,7 +41,7 @@ export const adminSideBarLinks = [
 ];
 
 export const FIELD_NAMES = {
-  fullName: "Nombre Completo",
+  name: "Nombre Completo",
   email: "Correo Electrónico",
   universityId: "Número de Identificación Universitaria",
   password: "Contraseña",
@@ -49,7 +49,7 @@ export const FIELD_NAMES = {
 };
 
 export const FIELD_TYPES = {
-  fullName: "text",
+  name: "text",
   email: "email",
   universityId: "number",
   password: "password",
