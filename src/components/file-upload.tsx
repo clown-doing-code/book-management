@@ -79,8 +79,8 @@ const FileUpload = ({
     setIsUploading(false);
     setProgress(0);
 
-    toast.error(`${type} upload failed`, {
-      description: `Your ${type} could not be uploaded. Please try again.`,
+    toast.error(`Error al subir ${type}`, {
+      description: `Tu ${type} no se pudo subir. Por favor, inténtalo de nuevo.`,
     });
   };
 
@@ -90,26 +90,26 @@ const FileUpload = ({
     setIsUploading(false);
     setProgress(100);
 
-    toast.success(`${type} uploaded successfully`, {
-      description: `${res.filePath} uploaded successfully!`,
+    toast.success(`${type} subido exitosamente`, {
+      description: `¡${res.filePath} se subió correctamente!`,
     });
 
-    // Reset progress after a delay
+    // Reiniciar progreso después de un retraso
     setTimeout(() => setProgress(0), 2000);
   };
 
   const onValidate = (file: File) => {
     if (type === "image") {
       if (file.size > 20 * 1024 * 1024) {
-        toast.error("File size too large", {
-          description: "Please upload a file that is less than 20MB in size",
+        toast.error("Archivo demasiado grande", {
+          description: "Por favor, sube un archivo de menos de 20MB.",
         });
         return false;
       }
     } else if (type === "video") {
       if (file.size > 50 * 1024 * 1024) {
-        toast.error("File size too large", {
-          description: "Please upload a file that is less than 50MB in size",
+        toast.error("Archivo demasiado grande", {
+          description: "Por favor, sube un archivo de menos de 50MB.",
         });
         return false;
       }
@@ -144,9 +144,9 @@ const FileUpload = ({
   };
 
   const getFileIcon = () => {
-    if (type === "image") return <ImageIcon className="h-8 w-8" />;
-    if (type === "video") return <Video className="h-8 w-8" />;
-    return <File className="h-8 w-8" />;
+    if (type === "image") return <ImageIcon className="h-4 w-4" />;
+    if (type === "video") return <Video className="h-4 w-4" />;
+    return <File className="h-4 w-4" />;
   };
 
   return (

@@ -51,7 +51,7 @@ export default function AuthForm<T extends FieldValues>({
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
-    mode: "onSubmit", // Solo validar cuando se envíe el formulario
+    mode: "onChange", // Solo validar cuando se envíe el formulario
   });
 
   // Definir campos para cada paso
@@ -140,12 +140,12 @@ export default function AuthForm<T extends FieldValues>({
                     <div className="flex items-center gap-2">
                       <div
                         className={`h-2 w-8 rounded-full ${
-                          currentStep >= 1 ? "bg-amber-100" : "bg-gray-600"
+                          currentStep >= 1 ? "bg-amber-200" : "bg-gray-600"
                         }`}
                       />
                       <div
                         className={`h-2 w-8 rounded-full ${
-                          currentStep >= 2 ? "bg-amber-100" : "bg-gray-600"
+                          currentStep >= 2 ? "bg-amber-200" : "bg-gray-600"
                         }`}
                       />
                     </div>
@@ -163,7 +163,7 @@ export default function AuthForm<T extends FieldValues>({
                     name={fieldName as Path<T>}
                     render={({ field }) => (
                       <FormItem>
-                        <div className="grid gap-4">
+                        <div className="grid gap-2">
                           <FormLabel className="text-white capitalize">
                             {
                               FIELD_NAMES[
@@ -208,7 +208,7 @@ export default function AuthForm<T extends FieldValues>({
                       type="button"
                       onClick={handleBack}
                       variant="outline"
-                      className="inline-flex min-h-14 flex-1 cursor-pointer items-center justify-center rounded-md border-amber-100 px-6 py-2 text-base font-bold text-amber-100 hover:bg-amber-100/10"
+                      className="inline-flex min-h-14 flex-1 cursor-pointer items-center justify-center rounded-md border-amber-200 px-6 py-2 text-base font-bold text-amber-200 hover:bg-amber-200/10"
                     >
                       <ChevronLeft className="mr-2 h-4 w-4" />
                       Anterior
@@ -223,7 +223,7 @@ export default function AuthForm<T extends FieldValues>({
                         ? () => form.handleSubmit(handleFormSubmit)()
                         : handleNext
                     }
-                    className={`inline-flex min-h-14 cursor-pointer items-center justify-center rounded-md bg-amber-100 px-6 py-2 text-base font-bold text-black hover:bg-amber-100/80 ${
+                    className={`inline-flex min-h-14 cursor-pointer items-center justify-center rounded-md bg-amber-200 px-6 py-2 text-base font-bold text-black hover:bg-amber-200/80 ${
                       !isSignIn && currentStep > 1 ? "flex-1" : "w-full"
                     }`}
                   >
@@ -261,7 +261,7 @@ export default function AuthForm<T extends FieldValues>({
                 src="/images/auth-illustration.png"
                 alt="auth illustration"
                 fill
-                className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.6] dark:grayscale"
+                className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.8] dark:grayscale"
               />
             </div>
           </Form>

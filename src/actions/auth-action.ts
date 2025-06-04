@@ -1,10 +1,20 @@
 "use server";
 
-import { db } from "@/database/drizzle";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { users } from "@/database/schema";
-import { eq } from "drizzle-orm";
+import { APIError } from "better-auth/api";
+
+const ERROR_MESSAGES_ES: Record<string, string> = {
+  "User not found": "Usuario no encontrado.",
+  "User already exists": "Este correo electrónico ya está en uso.",
+  "Missing required field": "Falta un campo obligatorio.",
+  "Invalid email or password":
+    "El correo electrónico o la contraseña no es válido.",
+  "Network error": "Error de red. Intenta nuevamente.",
+};
+
+const getTranslatedError = (message: string): string => {
+  return ERROR_MESSAGES_ES[message] || "Ocurrió un error inesperado.";
+};
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">,
@@ -12,22 +22,20 @@ export const signInWithCredentials = async (
   const { email, password } = params;
 
   try {
-    const result = await auth.api.signInEmail({
+    await auth.api.signInEmail({
       body: {
         email,
         password,
       },
-      asResponse: true, // returns a response object instead of data
     });
-    if (!result?.ok) {
-      const errorData = await result.json();
-      return { success: false, error: errorData.message };
-    }
 
     return { success: true };
   } catch (error) {
-    console.log(error, "Error al iniciar sesión");
-    return { success: false, error: "Error al iniciar sesión" };
+    if (error instanceof APIError) {
+      console.log("APIError", error.message, error.status);
+      const translated = getTranslatedError(error.message);
+      return { success: false, error: translated };
+    }
   }
 };
 
@@ -35,7 +43,6 @@ export const signUp = async (params: AuthCredentials) => {
   const { name, email, universityId, password, universityCard } = params;
 
   try {
-    // Si signUpEmail devuelve el usuario creado
     await auth.api.signUpEmail({
       body: {
         name,
@@ -46,17 +53,12 @@ export const signUp = async (params: AuthCredentials) => {
       },
     });
 
-    // // Y si signUpResult contiene el user.id
-    // if (signUpResult?.user?.id) {
-    //   await db
-    //     .update(users)
-    //     .set({ universityId, universityCard })
-    //     .where(eq(users.id, signUpResult.user.id));
-    // }
-
     return { success: true };
   } catch (error) {
-    console.log(error, "Error al registrar");
-    return { success: false, error: "Error al registrar" };
+    if (error instanceof APIError) {
+      console.log("APIError", error.message, error.status);
+      const translated = getTranslatedError(error.message);
+      return { success: false, error: translated };
+    }
   }
 };
