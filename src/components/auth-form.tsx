@@ -140,12 +140,16 @@ export default function AuthForm<T extends FieldValues>({
                     <div className="flex items-center gap-2">
                       <div
                         className={`h-2 w-8 rounded-full ${
-                          currentStep >= 1 ? "bg-amber-200" : "bg-gray-600"
+                          currentStep >= 1
+                            ? "bg-primary"
+                            : "bg-muted-foreground"
                         }`}
                       />
                       <div
                         className={`h-2 w-8 rounded-full ${
-                          currentStep >= 2 ? "bg-amber-200" : "bg-gray-600"
+                          currentStep >= 2
+                            ? "bg-primary"
+                            : "bg-muted-foreground"
                         }`}
                       />
                     </div>
@@ -189,7 +193,7 @@ export default function AuthForm<T extends FieldValues>({
                                   ]
                                 }
                                 {...field}
-                                className="placeholder:text-muted-100 min-h-14 w-full text-base font-bold text-white placeholder:font-normal"
+                                className="w-full"
                               />
                             )}
                           </FormControl>
@@ -208,7 +212,7 @@ export default function AuthForm<T extends FieldValues>({
                       type="button"
                       onClick={handleBack}
                       variant="outline"
-                      className="inline-flex min-h-14 flex-1 cursor-pointer items-center justify-center rounded-md border-amber-200 px-6 py-2 text-base font-bold text-amber-200 hover:bg-amber-200/10"
+                      className="flex-1 px-6 py-2 text-base font-bold"
                     >
                       <ChevronLeft className="mr-2 h-4 w-4" />
                       Anterior
@@ -223,7 +227,7 @@ export default function AuthForm<T extends FieldValues>({
                         ? () => form.handleSubmit(handleFormSubmit)()
                         : handleNext
                     }
-                    className={`inline-flex min-h-14 cursor-pointer items-center justify-center rounded-md bg-amber-200 px-6 py-2 text-base font-bold text-black hover:bg-amber-200/80 ${
+                    className={`inline-flex cursor-pointer items-center justify-center px-6 py-2 text-base font-bold ${
                       !isSignIn && currentStep > 1 ? "flex-1" : "w-full"
                     }`}
                   >
@@ -249,7 +253,7 @@ export default function AuthForm<T extends FieldValues>({
 
                   <Link
                     href={isSignIn ? "/sign-up" : "/sign-in"}
-                    className="font-bold text-amber-200 hover:underline"
+                    className="font-bold text-primary hover:underline"
                   >
                     {isSignIn ? "Crear una cuenta" : "Iniciar sesión"}
                   </Link>
@@ -267,7 +271,7 @@ export default function AuthForm<T extends FieldValues>({
           </Form>
         </CardContent>
       </Card>
-      <div className="text-center text-xs text-balance text-muted-foreground *:[a]:underline *:[a]:underline-offset-4 *:[a]:hover:text-amber-200">
+      <div className="text-center text-xs text-balance text-muted-foreground *:[a]:underline *:[a]:underline-offset-4 *:[a]:hover:text-primary">
         Al hacer clic en continuar, aceptas nuestros{" "}
         <a href="#">Términos de servicio</a> y nuestra{" "}
         <a href="#">Política de privacidad</a>.

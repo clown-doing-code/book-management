@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import BookCover from "./book-cover";
+import { Book } from "../../types";
 
 export default function BookOverview({
   id,
@@ -17,6 +18,7 @@ export default function BookOverview({
   coverUrl,
   videoUrl,
   summary,
+  language,
 }: Book) {
   return (
     <section className="flex flex-col-reverse items-center gap-12 sm:gap-32 xl:flex-row xl:gap-8">
@@ -43,22 +45,21 @@ export default function BookOverview({
 
         <div className="mt-1 flex flex-row flex-wrap gap-4">
           <p className="text-xl text-white">
-            Copias totales:{" "}
-            <span className="ml-2 font-semibold text-amber-200">
-              {totalCopies}
-            </span>
-          </p>
-
-          <p className="text-xl text-white">
             Copias disponibles:{" "}
             <span className="ml-2 font-semibold text-amber-200">
-              {availableCopies}
+              {availableCopies} / {totalCopies}
+            </span>
+          </p>
+          <p className="text-xl text-white">
+            Idioma:
+            <span className="ml-2 font-semibold text-amber-200">
+              {language}
             </span>
           </p>
         </div>
         <p className="mt-2 text-justify text-xl">{description}</p>
 
-        <Button className="mt-4 min-h-14 w-fit bg-amber-200 text-black hover:bg-amber-400/90 max-md:w-full">
+        <Button className="mt-4 min-h-14 w-fit cursor-pointer max-md:w-full">
           <Image src="/icons/book.svg" alt="book" width={20} height={20} />
           <p className="font-bebas-neue text-xl text-black">Pedir Prestado</p>
         </Button>

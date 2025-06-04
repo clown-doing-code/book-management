@@ -20,6 +20,7 @@ export const BORROW_STATUS_ENUM = pgEnum("borrow_status", [
   "BORROWED",
   "RETURNED",
 ]);
+export const LANGUAGE_ENUM = pgEnum("language", ["EN", "ES"]);
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -100,6 +101,7 @@ export const books = pgTable("books", {
   videoUrl: text("video_url").notNull(),
   summary: varchar("summary").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  language: LANGUAGE_ENUM("language").default("ES"),
 });
 
 export const borrowRecords = pgTable("borrow_records", {
@@ -129,4 +131,5 @@ export const schema = {
   STATUS_ENUM,
   ROLE_ENUM,
   BORROW_STATUS_ENUM,
+  LANGUAGE_ENUM,
 };

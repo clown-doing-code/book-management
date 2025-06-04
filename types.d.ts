@@ -12,9 +12,10 @@ interface Book {
   videoUrl: string;
   summary: string;
   isLoanedBook?: boolean;
+  language: Language;
 }
 
-interface AuthCredentials {
+export interface AuthCredentials {
   name: string;
   email: string;
   password: string;
@@ -38,4 +39,9 @@ interface BookParams {
 interface BorrowBookParams {
   bookId: string;
   userId: string;
+}
+
+export enum Language {
+  ENGLISH = "en",
+  SPANISH = "es",
 }

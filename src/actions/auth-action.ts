@@ -2,6 +2,7 @@
 
 import { auth } from "@/lib/auth";
 import { APIError } from "better-auth/api";
+import { AuthCredentials } from "../../types";
 
 const ERROR_MESSAGES_ES: Record<string, string> = {
   "User not found": "Usuario no encontrado.",
