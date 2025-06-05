@@ -36,7 +36,11 @@ export const signInWithCredentials = async (
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
   const { success } = await ratelimit.limit(ip);
 
-  if (!success) return redirect("/too-fast");
+  if (!success) {
+    redirect("/too-fast");
+    // Esta línea nunca se ejecutará, pero TypeScript necesita un return explícito
+    return { success: false, error: "Rate limit exceeded" };
+  }
 
   try {
     await auth.api.signInEmail({
@@ -67,7 +71,11 @@ export const signUp = async (
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
   const { success } = await ratelimit.limit(ip);
 
-  if (!success) return redirect("/too-fast");
+  if (!success) {
+    redirect("/too-fast");
+    // Esta línea nunca se ejecutará, pero TypeScript necesita un return explícito
+    return { success: false, error: "Rate limit exceeded" };
+  }
 
   const existingUser = await db
     .select()
