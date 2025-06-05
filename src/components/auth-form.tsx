@@ -28,9 +28,10 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 
 //TODO: Update the title and description
+//TODO: Center button icons
 
 type Props<T extends FieldValues> = {
   schema: ZodType<T>;
@@ -48,6 +49,7 @@ export default function AuthForm<T extends FieldValues>({
   const router = useRouter();
   const isSignIn = type === "SIGN_IN";
   const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const totalSteps = isSignIn ? 1 : 2;
 
   const form: UseFormReturn<T> = useForm({
@@ -85,19 +87,32 @@ export default function AuthForm<T extends FieldValues>({
   };
 
   const handleFormSubmit: SubmitHandler<T> = async (data) => {
-    // Solo procesar el envío final cuando sea sign-in o en el último paso del sign-up
-    const result = await onSubmit(data);
-    if (result.success) {
-      toast.success("¡Bienvenido a BookWise!", {
-        description: isSignIn ? "Inicio de sesión exitoso" : "Registro exitoso",
-      });
-      router.push("/");
-    } else {
+    setIsLoading(true);
+
+    try {
+      // Solo procesar el envío final cuando sea sign-in o en el último paso del sign-up
+      const result = await onSubmit(data);
+
+      if (result.success) {
+        toast.success("¡Bienvenido a BookWise!", {
+          description: isSignIn
+            ? "Inicio de sesión exitoso"
+            : "Registro exitoso",
+        });
+        router.push("/");
+      } else {
+        toast.error(`Error al ${isSignIn ? "iniciar sesión" : "registrarse"}`, {
+          description:
+            result.error ??
+            "Ocurrió un error inesperado, por favor intenta de nuevo",
+        });
+      }
+    } catch (error) {
       toast.error(`Error al ${isSignIn ? "iniciar sesión" : "registrarse"}`, {
-        description:
-          result.error ??
-          "Ocurrió un error inesperado, por favor intenta de nuevo",
+        description: "Ocurrió un error inesperado, por favor intenta de nuevo",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -186,6 +201,7 @@ export default function AuthForm<T extends FieldValues>({
                                 folder="ids"
                                 variant="dark"
                                 onFileChange={field.onChange}
+                                disabled={isLoading}
                               />
                             ) : (
                               <Input
@@ -196,6 +212,7 @@ export default function AuthForm<T extends FieldValues>({
                                 }
                                 {...field}
                                 className="w-full"
+                                disabled={isLoading}
                               />
                             )}
                           </FormControl>
@@ -214,7 +231,8 @@ export default function AuthForm<T extends FieldValues>({
                       type="button"
                       onClick={handleBack}
                       variant="outline"
-                      className="flex-1 px-6 py-2 text-base font-bold"
+                      className="flex flex-1 items-center justify-center px-6 py-2 text-base font-bold"
+                      disabled={isLoading}
                     >
                       <ChevronLeft className="mr-2 h-4 w-4" />
                       Anterior
@@ -229,11 +247,17 @@ export default function AuthForm<T extends FieldValues>({
                         ? () => form.handleSubmit(handleFormSubmit)()
                         : handleNext
                     }
-                    className={`justify-center px-6 py-2 text-base font-bold ${
+                    className={`flex items-center justify-center px-6 py-2 text-base font-bold ${
                       !isSignIn && currentStep > 1 ? "flex-1" : "w-full"
                     }`}
+                    disabled={isLoading}
                   >
-                    {isSignIn ? (
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {isSignIn ? "Iniciando sesión..." : "Registrando..."}
+                      </>
+                    ) : isSignIn ? (
                       "Iniciar Sesión"
                     ) : currentStep < totalSteps ? (
                       <>
@@ -255,7 +279,9 @@ export default function AuthForm<T extends FieldValues>({
 
                   <Link
                     href={isSignIn ? "/sign-up" : "/sign-in"}
-                    className="font-bold text-primary hover:underline"
+                    className={`font-bold text-primary hover:underline ${
+                      isLoading ? "pointer-events-none opacity-50" : ""
+                    }`}
                   >
                     {isSignIn ? "Crear una cuenta" : "Iniciar sesión"}
                   </Link>

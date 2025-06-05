@@ -45,6 +45,7 @@ interface Props {
   variant: "dark" | "light";
   onFileChange: (filePath: string) => void;
   value?: string;
+  disabled: boolean;
 }
 
 const FileUpload = ({
@@ -55,6 +56,7 @@ const FileUpload = ({
   variant,
   onFileChange,
   value,
+  disabled,
 }: Props) => {
   const ikUploadRef = useRef(null);
   const [file, setFile] = useState<{ filePath: string | null }>({
