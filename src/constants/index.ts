@@ -72,7 +72,7 @@ export const sampleBooks = [
     summary:
       "Una deslumbrante novela sobre todas las decisiones que conforman una vida bien vivida. La Biblioteca de la Medianoche cuenta la historia de Nora Seed mientras se encuentra entre la vida y la muerte.",
     isLoanedBook: true,
-    language: "EN",
+    language: "en",
   },
   {
     id: 2,
@@ -89,7 +89,7 @@ export const sampleBooks = [
     videoUrl: "/sample-videoUrl.mp4?updatedAt=1722593504152",
     summary:
       "Una guía revolucionaria para crear buenos hábitos, romper los malos y mejorar un 1% cada día.",
-    language: "EN",
+    language: "en",
   },
   {
     id: 3,
@@ -107,7 +107,7 @@ export const sampleBooks = [
     videoUrl: "/sample-videoUrl.mp4?updatedAt=1722593504152",
     summary:
       "Una guía esencial para comprender los mecanismos fundamentales de JavaScript, centrada en el alcance y las clausuras.",
-    language: "EN",
+    language: "en",
   },
   {
     id: 4,
@@ -125,7 +125,7 @@ export const sampleBooks = [
     videoUrl: "/sample-videoUrl.mp4?updatedAt=1722593504152",
     summary:
       "Un cuento mágico sobre Santiago, un pastor andaluz que emprende un viaje en busca de un tesoro terrenal.",
-    language: "EN",
+    language: "en",
   },
   {
     id: 5,
@@ -142,7 +142,7 @@ export const sampleBooks = [
     videoUrl: "/sample-videoUrl.mp4?updatedAt=1722593504152",
     summary:
       "Reglas para el éxito enfocado en un mundo lleno de distracciones, enseñando cómo cultivar una concentración profunda para lograr la máxima productividad.",
-    language: "EN",
+    language: "en",
   },
   {
     id: 6,
@@ -160,7 +160,7 @@ export const sampleBooks = [
     videoUrl: "/sample-videoUrl.mp4?updatedAt=1722593504152",
     summary:
       "Un manual de artesanía de software ágil, que ofrece las mejores prácticas y principios para escribir código limpio y mantenible.",
-    language: "EN",
+    language: "en",
   },
   {
     id: 7,
@@ -178,7 +178,7 @@ export const sampleBooks = [
     videoUrl: "/sample-videoUrl.mp4?updatedAt=1722593504152",
     summary:
       "Una guía atemporal para que los desarrolladores perfeccionen sus habilidades y mejoren sus prácticas de programación.",
-    language: "EN",
+    language: "en",
   },
   {
     id: 8,
@@ -196,6 +196,6 @@ export const sampleBooks = [
     videoUrl: "/sample-videoUrl.mp4?updatedAt=1722593504152",
     summary:
       "Morgan Housel explora los comportamientos y mentalidades únicas que moldean el éxito financiero y la toma de decisiones.",
-    language: "EN",
+    language: "en",
   },
 ];
