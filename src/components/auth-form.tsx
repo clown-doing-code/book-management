@@ -278,7 +278,7 @@ export default function AuthForm<T extends FieldValues>({
                     : "¿Ya tienes una cuenta? "}
 
                   <Link
-                    href={isSignIn ? "/sign-up" : "/sign-in"}
+                    href={isSignIn ? "/auth/sign-up" : "/auth/sign-in"}
                     className={`font-bold text-primary hover:underline ${
                       isLoading ? "pointer-events-none opacity-50" : ""
                     }`}

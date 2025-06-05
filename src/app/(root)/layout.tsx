@@ -18,7 +18,7 @@ export default async function Layout({
   });
 
   if (!session) {
-    redirect("/sign-in");
+    redirect("/auth/sign-in");
   }
 
   after(async () => {
@@ -40,7 +40,7 @@ export default async function Layout({
   });
 
   return (
-    <main className="flex min-h-screen flex-1 flex-col bg-muted px-5 xs:px-10 md:px-16">
+    <main className="flex min-h-screen flex-1 flex-col px-5 xs:px-10 md:px-16">
       <div className="mx-auto max-w-7xl">
         <Header />
 

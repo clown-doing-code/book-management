@@ -1,7 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
 

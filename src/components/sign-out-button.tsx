@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { signOut } from "@/lib/client";
+import { signOut } from "@/lib/auth-client";
 import { Loader2, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export default function SignOutButton() {
           await signOut({
             fetchOptions: {
               onSuccess() {
-                router.push("/sign-in");
+                router.push("/auth/sign-in");
               },
             },
           });

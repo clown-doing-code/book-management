@@ -33,7 +33,7 @@ export default async function Header() {
           </div>
           <div className="flex items-center space-x-2 md:space-x-4">
             {!session?.session ? (
-              <Link href="/sign-in" className="flex justify-center">
+              <Link href="/auth/sign-in" className="flex justify-center">
                 <Button>
                   <LogIn className="size-4" />
 

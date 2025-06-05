@@ -12,27 +12,11 @@ import { eq } from "drizzle-orm";
 import { workflowClient } from "@/lib/workflow";
 import config from "@/lib/config";
 
-const ERROR_MESSAGES_ES: Record<string, string> = {
-  "User not found": "Usuario no encontrado.",
-  "User already exists": "Este correo electrónico ya está en uso.",
-  "Missing required field": "Falta un campo obligatorio.",
-  "Invalid email or password":
-    "El correo electrónico o la contraseña no es válido.",
-  "Network error": "Error de red. Intenta nuevamente.",
-};
-
-const getTranslatedError = (message: string): string => {
-  return ERROR_MESSAGES_ES[message] || "Ocurrió un error inesperado.";
-};
-
-type AuthResponse = {
-  success: boolean;
-  error?: string;
-};
+//TODO: Update status messages
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">,
-): Promise<AuthResponse> => {
+) => {
   const { email, password } = params;
 
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
@@ -46,28 +30,45 @@ export const signInWithCredentials = async (
 
   try {
     await auth.api.signInEmail({
+      headers: await headers(),
       body: {
         email,
         password,
       },
-      asResponse: true,
     });
 
-    return { success: true };
+    return {
+      success: true,
+      error: "Ocurrió un error inesperado, por favor intenta de nuevo",
+    };
   } catch (error) {
     if (error instanceof APIError) {
-      console.log("APIError", error.message, error.status);
-      const translated = getTranslatedError(error.message);
-      return { success: false, error: translated };
+      switch (error.status) {
+        case "UNAUTHORIZED":
+          return {
+            success: false,
+            error: "El correo electrónico o la contraseña no es válido.",
+          };
+        case "BAD_REQUEST":
+          return {
+            success: false,
+            error: "Usuario no encontrado",
+          };
+        default:
+          return {
+            success: false,
+            error: "Ocurrió un error inesperado.",
+          };
+      }
     }
+    return {
+      success: false,
+      error: "Ocurrió un error inesperado, por favor intenta de nuevo",
+    };
   }
-
-  return { success: false, error: "Unexpected error occurred." };
 };
 
-export const signUp = async (
-  params: AuthCredentials,
-): Promise<AuthResponse> => {
+export const signUp = async (params: AuthCredentials) => {
   const { name, email, universityId, password, universityCard } = params;
 
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
@@ -91,6 +92,7 @@ export const signUp = async (
 
   try {
     await auth.api.signUpEmail({
+      headers: await headers(),
       body: {
         name,
         email,
@@ -98,7 +100,6 @@ export const signUp = async (
         universityId,
         universityCard,
       },
-      asResponse: true,
     });
 
     await workflowClient.trigger({
@@ -109,14 +110,27 @@ export const signUp = async (
       },
     });
 
-    return { success: true };
+    return {
+      success: true,
+      error: "Ocurrió un error inesperado, por favor intenta de nuevo",
+    };
   } catch (error) {
     if (error instanceof APIError) {
-      console.log("APIError", error.message, error.status);
-      const translated = getTranslatedError(error.message);
-      return { success: false, error: translated };
+      switch (error.status) {
+        case "UNPROCESSABLE_ENTITY":
+          return { success: false, error: "El usuario ya existe." };
+        case "BAD_REQUEST":
+          return {
+            success: false,
+            error: "El correo electrónico o la contraseña no es válido.",
+          };
+        default:
+          return { success: false, error: "Ocurrió un error inesperado." };
+      }
     }
+    return {
+      success: false,
+      error: "Ocurrió un error inesperado, por favor intenta de nuevo",
+    };
   }
-
-  return { success: false, error: "Unexpected error occurred." };
 };
