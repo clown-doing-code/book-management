@@ -30,6 +30,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
+//TODO: Update the title and description
+
 type Props<T extends FieldValues> = {
   schema: ZodType<T>;
   defaultValues: T;
@@ -51,7 +53,7 @@ export default function AuthForm<T extends FieldValues>({
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
-    mode: "onChange", // Solo validar cuando se envíe el formulario
+    mode: "onChange",
   });
 
   // Definir campos para cada paso
@@ -221,13 +223,13 @@ export default function AuthForm<T extends FieldValues>({
 
                   {/* Next/Submit button */}
                   <Button
-                    type="button" // Siempre tipo button para manejar manualmente
+                    type="button"
                     onClick={
                       isSignIn || currentStep === totalSteps
                         ? () => form.handleSubmit(handleFormSubmit)()
                         : handleNext
                     }
-                    className={`inline-flex cursor-pointer items-center justify-center px-6 py-2 text-base font-bold ${
+                    className={`justify-center px-6 py-2 text-base font-bold ${
                       !isSignIn && currentStep > 1 ? "flex-1" : "w-full"
                     }`}
                   >
@@ -260,12 +262,12 @@ export default function AuthForm<T extends FieldValues>({
                 </p>
               </div>
             </form>
-            <div className="relative hidden bg-muted md:block">
+            <div className="relative m-2 hidden bg-muted md:block">
               <Image
                 src="/images/auth-illustration.png"
                 alt="auth illustration"
                 fill
-                className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.8] dark:grayscale"
+                className="absolute inset-0 h-full w-full rounded-xl object-cover dark:brightness-[0.8] dark:grayscale"
               />
             </div>
           </Form>

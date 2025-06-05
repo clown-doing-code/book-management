@@ -5,9 +5,7 @@ import AuthForm from "@/components/auth-form";
 import { signUpSchema } from "@/lib/validations";
 import React from "react";
 
-type Props = {};
-
-export default function SignUpPage({}: Props) {
+export default function SignUpPage() {
   return (
     <AuthForm
       type="SIGN_UP"

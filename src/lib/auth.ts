@@ -9,6 +9,9 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  rateLimit: {
+    enabled: true,
+  },
   database: drizzleAdapter(db, {
     provider: "pg",
     schema: schema,

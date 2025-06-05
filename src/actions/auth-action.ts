@@ -3,6 +3,12 @@
 import { auth } from "@/lib/auth";
 import { APIError } from "better-auth/api";
 import { AuthCredentials } from "../../types";
+import { headers } from "next/headers";
+import ratelimit from "@/lib/ratelimit";
+import { redirect } from "next/navigation";
+import { db } from "@/database/drizzle";
+import { users } from "@/database/schema";
+import { eq } from "drizzle-orm";
 
 const ERROR_MESSAGES_ES: Record<string, string> = {
   "User not found": "Usuario no encontrado.",
@@ -17,10 +23,20 @@ const getTranslatedError = (message: string): string => {
   return ERROR_MESSAGES_ES[message] || "Ocurrió un error inesperado.";
 };
 
+type AuthResponse = {
+  success: boolean;
+  error?: string;
+};
+
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">,
-) => {
+): Promise<AuthResponse> => {
   const { email, password } = params;
+
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
+  const { success } = await ratelimit.limit(ip);
+
+  if (!success) return redirect("/too-fast");
 
   try {
     await auth.api.signInEmail({
@@ -28,6 +44,7 @@ export const signInWithCredentials = async (
         email,
         password,
       },
+      asResponse: true,
     });
 
     return { success: true };
@@ -38,10 +55,29 @@ export const signInWithCredentials = async (
       return { success: false, error: translated };
     }
   }
+
+  return { success: false, error: "Unexpected error occurred." };
 };
 
-export const signUp = async (params: AuthCredentials) => {
+export const signUp = async (
+  params: AuthCredentials,
+): Promise<AuthResponse> => {
   const { name, email, universityId, password, universityCard } = params;
+
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
+  const { success } = await ratelimit.limit(ip);
+
+  if (!success) return redirect("/too-fast");
+
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (existingUser.length > 0) {
+    return { success: false, error: "Este correo electrónico ya está en uso." };
+  }
 
   try {
     await auth.api.signUpEmail({
@@ -52,6 +88,7 @@ export const signUp = async (params: AuthCredentials) => {
         universityId,
         universityCard,
       },
+      asResponse: true,
     });
 
     return { success: true };
@@ -62,4 +99,6 @@ export const signUp = async (params: AuthCredentials) => {
       return { success: false, error: translated };
     }
   }
+
+  return { success: false, error: "Unexpected error occurred." };
 };
