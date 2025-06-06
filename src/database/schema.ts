@@ -33,8 +33,8 @@ export const users = pgTable(
       .$defaultFn(() => false)
       .notNull(),
     image: text("image"),
-    universityId: integer("university_id").notNull().unique(),
-    universityCard: text("university_card").notNull(),
+    credentialId: integer("credential_id").notNull().unique(),
+    credentialCard: text("credential_card").notNull(),
     status: STATUS_ENUM("status").default("PENDING"),
     role: ROLE_ENUM("role").default("USER"),
     lastActivityDate: date("last_activity_date").defaultNow(),

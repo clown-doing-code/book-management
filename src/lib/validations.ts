@@ -4,10 +4,10 @@ export const signUpSchema = z
   .object({
     name: z.string().min(3, { message: "El nombre es requerido" }),
     email: z.string().email({ message: "El correo electrónico no es válido" }),
-    universityId: z.coerce
+    credentialId: z.coerce
       .number()
       .min(3, { message: "La credencial universitaria es requerida" }),
-    universityCard: z
+    credentialCard: z
       .string()
       .nonempty({ message: "La identificación universitaria es requerida" }),
     password: z

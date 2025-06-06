@@ -60,7 +60,7 @@ export default function AuthForm<T extends FieldValues>({
 
   // Definir campos para cada paso
   const step1Fields = ["name", "email", "password", "confirmPassword"];
-  const step2Fields = ["universityCard", "universityId"];
+  const step2Fields = ["credentialCard", "credentialId"];
 
   const getCurrentStepFields = () => {
     if (isSignIn) return Object.keys(defaultValues);
@@ -119,16 +119,16 @@ export default function AuthForm<T extends FieldValues>({
   const getStepTitle = () => {
     if (isSignIn) return "Bienvenido de nuevo a BookWise";
     return currentStep === 1
-      ? "Crea tu cuenta de biblioteca"
-      : "Completa tu registro";
+      ? "Crea tu cuenta de lector"
+      : "Verifica tu identidad";
   };
 
   const getStepDescription = () => {
     if (isSignIn)
-      return "Accede a la vasta colección de recursos y mantente actualizado";
+      return "Ingresa para explorar y solicitar libros de nuestra colección digital";
     return currentStep === 1
-      ? "Completa la información básica para comenzar"
-      : "Sube tu identificación universitaria para verificar tu cuenta";
+      ? "Cuéntanos un poco sobre ti para empezar a pedir libros"
+      : "Sube tu credencial para que podamos verificar tu identidad";
   };
 
   return (
@@ -193,7 +193,7 @@ export default function AuthForm<T extends FieldValues>({
                             }
                           </FormLabel>
                           <FormControl>
-                            {field.name === "universityCard" ? (
+                            {field.name === "credentialCard" ? (
                               <FileUpload
                                 type="image"
                                 accept="image/*"

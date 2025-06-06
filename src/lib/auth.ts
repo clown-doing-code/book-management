@@ -29,11 +29,11 @@ export const auth = betterAuth({
   }),
   user: {
     additionalFields: {
-      universityId: {
+      credentialId: {
         type: "number",
         required: false,
       },
-      universityCard: {
+      credentialCard: {
         type: "string",
         required: false,
       },

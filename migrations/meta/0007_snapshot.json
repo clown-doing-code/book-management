@@ -1,6 +1,6 @@
 {
-  "id": "2e2ad020-ddea-4181-a887-1c068d140d9b",
-  "prevId": "04f7f834-98b9-4fef-b89e-1db303e53aaa",
+  "id": "ffa30fc4-b00f-498d-aae9-5f1fe19d45f2",
+  "prevId": "2e2ad020-ddea-4181-a887-1c068d140d9b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -597,14 +597,14 @@
           "primaryKey": false,
           "notNull": false
         },
-        "university_id": {
-          "name": "university_id",
+        "credential_id": {
+          "name": "credential_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "university_card": {
-          "name": "university_card",
+        "credential_card": {
+          "name": "credential_card",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -671,10 +671,10 @@
           "nullsNotDistinct": false,
           "columns": ["email"]
         },
-        "users_university_id_unique": {
-          "name": "users_university_id_unique",
+        "users_credential_id_unique": {
+          "name": "users_credential_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["university_id"]
+          "columns": ["credential_id"]
         }
       },
       "policies": {},

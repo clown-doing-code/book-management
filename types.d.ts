@@ -19,8 +19,8 @@ export interface AuthCredentials {
   name: string;
   email: string;
   password: string;
-  universityId: number;
-  universityCard: string;
+  credentialId: number;
+  credentialCard: string;
 }
 
 interface BookParams {

@@ -82,7 +82,7 @@ export const signInWithCredentials = async (
 export const signUp = async (
   params: AuthCredentials,
 ): Promise<ActionResult> => {
-  const { name, email, universityId, password, universityCard } = params;
+  const { name, email, credentialId, password, credentialCard } = params;
 
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
   const { success } = await ratelimit.limit(ip);
@@ -109,8 +109,8 @@ export const signUp = async (
         name,
         email,
         password,
-        universityId,
-        universityCard,
+        credentialId,
+        credentialCard,
       },
     });
 

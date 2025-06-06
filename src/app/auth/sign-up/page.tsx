@@ -15,8 +15,8 @@ export default function SignUpPage() {
         password: "",
         confirmPassword: "",
         name: "",
-        universityId: 0,
-        universityCard: "",
+        credentialId: 0,
+        credentialCard: "",
       }}
       onSubmit={signUp}
     />
