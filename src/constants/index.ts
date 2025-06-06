@@ -45,6 +45,7 @@ export const FIELD_NAMES = {
   email: "Correo Electrónico",
   universityId: "Número de Identificación Universitaria",
   password: "Contraseña",
+  confirmPassword: "Confirmar Contraseña",
   universityCard: "Subir Tarjeta de Identificación Universitaria",
 };
 
@@ -53,6 +54,7 @@ export const FIELD_TYPES = {
   email: "email",
   universityId: "number",
   password: "password",
+  confirmPassword: "password",
 };
 
 export const sampleBooks = [

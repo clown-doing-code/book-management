@@ -59,7 +59,7 @@ export default function AuthForm<T extends FieldValues>({
   });
 
   // Definir campos para cada paso
-  const step1Fields = ["name", "email", "password"];
+  const step1Fields = ["name", "email", "password", "confirmPassword"];
   const step2Fields = ["universityCard", "universityId"];
 
   const getCurrentStepFields = () => {

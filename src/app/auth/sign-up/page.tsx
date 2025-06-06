@@ -13,6 +13,7 @@ export default function SignUpPage() {
       defaultValues={{
         email: "",
         password: "",
+        confirmPassword: "",
         name: "",
         universityId: 0,
         universityCard: "",
