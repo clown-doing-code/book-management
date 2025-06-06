@@ -43,6 +43,13 @@
       "when": 1749044715651,
       "tag": "0005_silky_fantastic_four",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1749169789034,
+      "tag": "0006_absent_madripoor",
+      "breakpoints": true
     }
   ]
 }

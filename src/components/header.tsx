@@ -55,7 +55,7 @@ export default async function Header() {
                   </Link>
                 </nav>
                 <Suspense fallback={<SignInFallback />}>
-                  <SignInButton />
+                  <SignInButton session={JSON.parse(JSON.stringify(session))} />
                 </Suspense>
               </>
             )}

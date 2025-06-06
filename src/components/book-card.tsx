@@ -1,10 +1,9 @@
-import Image from "next/image";
-import React from "react";
 import BookCover from "./book-cover";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { Calendar } from "lucide-react";
+import { Book } from "types";
 
 export default function BookCard({
   id,
@@ -38,7 +37,10 @@ export default function BookCard({
               <p className="text-sm text-amber-100">11 días para devolver</p>
             </div>
 
-            <Button className="mt-3 w-full bg-muted font-bebas-neue text-base hover:bg-amber-200 hover:text-black">
+            <Button
+              variant="outline"
+              className="mt-3 w-full font-bebas-neue text-base"
+            >
               Descargar factura
             </Button>
           </div>

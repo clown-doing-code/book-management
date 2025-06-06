@@ -1,5 +1,6 @@
 import React from "react";
 import BookCard from "./book-card";
+import { Book } from "types";
 
 type Props = {
   title: string;

@@ -29,8 +29,8 @@ const PasswordInput = ({
       />
       <Button
         type="button"
-        variant="ghost"
-        size="sm"
+        variant="link"
+        size="icon"
         className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
         onClick={() => setShowPassword((prev) => !prev)}
         disabled={disabled}

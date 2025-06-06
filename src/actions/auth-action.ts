@@ -12,11 +12,16 @@ import { eq } from "drizzle-orm";
 import { workflowClient } from "@/lib/workflow";
 import config from "@/lib/config";
 
-//TODO: Update status messages
+type ActionResult<T = any> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+  fieldErrors?: Record<string, string[]>;
+};
 
 export const signInWithCredentials = async (
   params: Pick<AuthCredentials, "email" | "password">,
-) => {
+): Promise<ActionResult> => {
   const { email, password } = params;
 
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
@@ -29,7 +34,7 @@ export const signInWithCredentials = async (
   }
 
   try {
-    await auth.api.signInEmail({
+    const result = await auth.api.signInEmail({
       headers: await headers(),
       body: {
         email,
@@ -39,7 +44,7 @@ export const signInWithCredentials = async (
 
     return {
       success: true,
-      error: "Ocurrió un error inesperado, por favor intenta de nuevo",
+      data: { user: result },
     };
   } catch (error) {
     if (error instanceof APIError) {
@@ -48,6 +53,12 @@ export const signInWithCredentials = async (
           return {
             success: false,
             error: "El correo electrónico o la contraseña no es válido.",
+          };
+        case "TOO_MANY_REQUESTS":
+          return {
+            success: false,
+            error:
+              "Demasiados intentos de inicio de sesión. Intenta más tarde.",
           };
         case "BAD_REQUEST":
           return {
@@ -68,7 +79,9 @@ export const signInWithCredentials = async (
   }
 };
 
-export const signUp = async (params: AuthCredentials) => {
+export const signUp = async (
+  params: AuthCredentials,
+): Promise<ActionResult> => {
   const { name, email, universityId, password, universityCard } = params;
 
   const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1";
@@ -91,8 +104,7 @@ export const signUp = async (params: AuthCredentials) => {
   }
 
   try {
-    await auth.api.signUpEmail({
-      headers: await headers(),
+    const authResult = await auth.api.signUpEmail({
       body: {
         name,
         email,
@@ -112,7 +124,7 @@ export const signUp = async (params: AuthCredentials) => {
 
     return {
       success: true,
-      error: "Ocurrió un error inesperado, por favor intenta de nuevo",
+      data: { user: authResult },
     };
   } catch (error) {
     if (error instanceof APIError) {

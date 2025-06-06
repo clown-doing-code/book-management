@@ -15,7 +15,10 @@ export default function Home() {
 
       <BookList
         title="Libros Populares"
-        books={sampleBooks}
+        books={sampleBooks.map((book) => ({
+          ...book,
+          language: book.language as Language,
+        }))}
         containerClassName="mt-28"
       />
     </>

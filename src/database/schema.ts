@@ -8,6 +8,7 @@ import {
   pgEnum,
   timestamp,
   boolean,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const STATUS_ENUM = pgEnum("status", [
@@ -22,104 +23,161 @@ export const BORROW_STATUS_ENUM = pgEnum("borrow_status", [
 ]);
 export const LANGUAGE_ENUM = pgEnum("language", ["EN", "ES"]);
 
-export const users = pgTable("users", {
-  id: text("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified")
-    .$defaultFn(() => false)
-    .notNull(),
-  image: text("image"),
-  universityId: integer("university_id").notNull().unique(),
-  universityCard: text("university_card").notNull(),
-  status: STATUS_ENUM("status").default("PENDING"),
-  role: ROLE_ENUM("role").default("USER"),
-  lastActivityDate: date("last_activity_date").defaultNow(),
-  createdAt: timestamp("created_at", {
-    withTimezone: true,
-  }).defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: text("id").primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    email: text("email").notNull().unique(),
+    emailVerified: boolean("email_verified")
+      .$defaultFn(() => false)
+      .notNull(),
+    image: text("image"),
+    universityId: integer("university_id").notNull().unique(),
+    universityCard: text("university_card").notNull(),
+    status: STATUS_ENUM("status").default("PENDING"),
+    role: ROLE_ENUM("role").default("USER"),
+    lastActivityDate: date("last_activity_date").defaultNow(),
+    createdAt: timestamp("created_at", {
+      withTimezone: true,
+    }).defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => ({
+    // Índice recomendado por Better Auth para el campo email
+    emailIdx: index("users_email_idx").on(table.email),
+  }),
+);
 
-export const sessions = pgTable("sessions", {
-  id: text("id").primaryKey(),
-  expiresAt: timestamp("expires_at").notNull(),
-  token: text("token").notNull().unique(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-  ipAddress: text("ip_address"),
-  userAgent: text("user_agent"),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-});
+export const sessions = pgTable(
+  "sessions",
+  {
+    id: text("id").primaryKey(),
+    expiresAt: timestamp("expires_at").notNull(),
+    token: text("token").notNull().unique(),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    // Índices recomendados por Better Auth para userId y token
+    userIdIdx: index("sessions_user_id_idx").on(table.userId),
+    tokenIdx: index("sessions_token_idx").on(table.token),
+    // Índice compuesto para consultas que usen ambos campos
+    userIdTokenIdx: index("sessions_user_id_token_idx").on(
+      table.userId,
+      table.token,
+    ),
+  }),
+);
 
-export const accounts = pgTable("accounts", {
-  id: text("id").primaryKey(),
-  accountId: text("account_id").notNull(),
-  providerId: text("provider_id").notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  accessToken: text("access_token"),
-  refreshToken: text("refresh_token"),
-  idToken: text("id_token"),
-  accessTokenExpiresAt: timestamp("access_token_expires_at"),
-  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-  scope: text("scope"),
-  password: text("password"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-});
+export const accounts = pgTable(
+  "accounts",
+  {
+    id: text("id").primaryKey(),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    scope: text("scope"),
+    password: text("password"),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+  },
+  (table) => ({
+    // Índice recomendado por Better Auth para userId
+    userIdIdx: index("accounts_user_id_idx").on(table.userId),
+  }),
+);
 
-export const verifications = pgTable("verifications", {
-  id: text("id").primaryKey(),
-  identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").$defaultFn(
-    () => /* @__PURE__ */ new Date(),
-  ),
-  updatedAt: timestamp("updated_at").$defaultFn(
-    () => /* @__PURE__ */ new Date(),
-  ),
-});
+export const verifications = pgTable(
+  "verifications",
+  {
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").$defaultFn(
+      () => /* @__PURE__ */ new Date(),
+    ),
+    updatedAt: timestamp("updated_at").$defaultFn(
+      () => /* @__PURE__ */ new Date(),
+    ),
+  },
+  (table) => ({
+    // Índice recomendado por Better Auth para identifier
+    identifierIdx: index("verifications_identifier_idx").on(table.identifier),
+  }),
+);
 
-export const books = pgTable("books", {
-  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
-  title: varchar("title", { length: 255 }).notNull(),
-  author: varchar("author", { length: 255 }).notNull(),
-  genre: text("genre").notNull(),
-  rating: integer("rating").notNull(),
-  coverUrl: text("cover_url").notNull(),
-  coverColor: varchar("cover_color", { length: 7 }).notNull(),
-  description: text("description").notNull(),
-  totalCopies: integer("total_copies").notNull().default(1),
-  availableCopies: integer("available_copies").notNull().default(0),
-  videoUrl: text("video_url").notNull(),
-  summary: varchar("summary").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-  language: LANGUAGE_ENUM("language").default("ES"),
-});
+export const books = pgTable(
+  "books",
+  {
+    id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+    title: varchar("title", { length: 255 }).notNull(),
+    author: varchar("author", { length: 255 }).notNull(),
+    genre: text("genre").notNull(),
+    rating: integer("rating").notNull(),
+    coverUrl: text("cover_url").notNull(),
+    coverColor: varchar("cover_color", { length: 7 }).notNull(),
+    description: text("description").notNull(),
+    totalCopies: integer("total_copies").notNull().default(1),
+    availableCopies: integer("available_copies").notNull().default(0),
+    videoUrl: text("video_url").notNull(),
+    summary: varchar("summary").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    language: LANGUAGE_ENUM("language").default("ES"),
+  },
+  (table) => ({
+    // Índices adicionales para optimizar búsquedas comunes en tu app
+    titleIdx: index("books_title_idx").on(table.title),
+    authorIdx: index("books_author_idx").on(table.author),
+    genreIdx: index("books_genre_idx").on(table.genre),
+  }),
+);
 
-export const borrowRecords = pgTable("borrow_records", {
-  id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
-  userId: text("user_id") // Cambiar de uuid a text
-    .references(() => users.id)
-    .notNull(),
-  bookId: uuid("book_id")
-    .references(() => books.id)
-    .notNull(),
-  borrowDate: timestamp("borrow_date", { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  dueDate: date("due_date").notNull(),
-  returnDate: date("return_date"),
-  status: BORROW_STATUS_ENUM("status").default("BORROWED").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-});
+export const borrowRecords = pgTable(
+  "borrow_records",
+  {
+    id: uuid("id").notNull().primaryKey().defaultRandom().unique(),
+    userId: text("user_id") // Cambiar de uuid a text
+      .references(() => users.id)
+      .notNull(),
+    bookId: uuid("book_id")
+      .references(() => books.id)
+      .notNull(),
+    borrowDate: timestamp("borrow_date", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    dueDate: date("due_date").notNull(),
+    returnDate: date("return_date"),
+    status: BORROW_STATUS_ENUM("status").default("BORROWED").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => ({
+    // Índices para optimizar consultas de préstamos
+    userIdIdx: index("borrow_records_user_id_idx").on(table.userId),
+    bookIdIdx: index("borrow_records_book_id_idx").on(table.bookId),
+    statusIdx: index("borrow_records_status_idx").on(table.status),
+    // Índice compuesto para consultas que busquen préstamos de un usuario específico
+    userIdStatusIdx: index("borrow_records_user_id_status_idx").on(
+      table.userId,
+      table.status,
+    ),
+  }),
+);
 
 export const schema = {
   users,

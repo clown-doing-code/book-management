@@ -5,10 +5,10 @@ import { nextCookies } from "better-auth/next-js";
 import { multiSession, openAPI } from "better-auth/plugins";
 import { schema } from "@/database/schema";
 import { resend } from "./resend";
-import { reactResetPasswordEmail } from "@/components/email/reset-password";
 
 export const auth = betterAuth({
   emailVerification: {
+    expiresIn: 60 * 60, // 1 hour
     async sendVerificationEmail({ user, url }) {
       const res = await resend.emails.send({
         from: "Acme <onboarding@resend.dev>",
@@ -21,17 +21,6 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    async sendResetPassword({ user, url }) {
-      await resend.emails.send({
-        from: "Acme <onboarding@resend.dev>",
-        to: user.email,
-        subject: "Reset your password",
-        react: reactResetPasswordEmail({
-          username: user.email,
-          resetLink: url,
-        }),
-      });
-    },
   },
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -51,7 +40,12 @@ export const auth = betterAuth({
     },
   },
   session: {
-    expiresIn: 30 * 24 * 60 * 60,
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // 5 minutos en segundos
+    },
+    expiresIn: 60 * 60 * 24 * 7, // 7 días
+    updateAge: 60 * 60 * 24, // Actualizar cada 24 horas
   },
   plugins: [openAPI(), multiSession(), nextCookies()],
 });
