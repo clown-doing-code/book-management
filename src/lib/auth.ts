@@ -30,7 +30,7 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       credentialId: {
-        type: "number",
+        type: "string",
         required: false,
       },
       credentialCard: {

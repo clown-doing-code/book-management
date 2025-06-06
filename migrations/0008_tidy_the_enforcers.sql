@@ -1,0 +1,1 @@
+ALTER TABLE "users" ALTER COLUMN "credential_id" SET DATA TYPE text;

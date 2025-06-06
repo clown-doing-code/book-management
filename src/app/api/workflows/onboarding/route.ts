@@ -3,8 +3,13 @@ import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
 import { eq } from "drizzle-orm";
 import { sendEmail } from "@/lib/workflow";
+import { render } from "@react-email/render";
+import WelcomeEmail from "@/components/email/welcome-email";
+import React from "react";
 
 type UserState = "non-active" | "active";
+
+//FIXME: Improve the code of the workflow
 
 type InitialData = {
   email: string;
@@ -43,11 +48,22 @@ export const { POST } = serve<InitialData>(async (context) => {
 
   // Welcome Email
   await context.run("new-signup", async () => {
-    await sendEmail({
-      email,
-      subject: "Welcome to the platform",
-      message: `Welcome ${name}!`,
-    });
+    try {
+      const htmlMessage = await render(
+        React.createElement(WelcomeEmail, { userName: name }),
+        { pretty: true },
+      );
+      const message = String(htmlMessage);
+      const response = await sendEmail({
+        email,
+        subject: "Welcome to BookWise Library",
+        message,
+      });
+      console.log("Welcome email sent successfully");
+      return response;
+    } catch (error) {
+      console.error("Error sending welcome email:", error);
+    }
   });
 
   await context.sleep("wait-for-3-days", 60 * 60 * 24 * 3);

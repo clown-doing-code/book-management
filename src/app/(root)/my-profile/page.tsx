@@ -1,26 +1,38 @@
+import { getSessionData } from "@/actions/auth-action";
+import { Skeleton } from "@/components/ui/skeleton";
 import UserCard from "@/components/user-card";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+
+function serializeForClient<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
 
 export default async function ProfilePage() {
-  const [session, activeSessions] = await Promise.all([
-    auth.api.getSession({
-      headers: await headers(),
-    }),
-    auth.api.listSessions({
-      headers: await headers(),
-    }),
-  ]).catch((e) => {
-    console.log(e);
-    throw redirect("/auth/sign-in");
-  });
+  const { session, activeSessions, isAuthenticated } = await getSessionData();
+
+  if (!isAuthenticated) {
+    redirect("/auth/sign-in");
+  }
   return (
     <div className="w-full">
-      <UserCard
-        session={JSON.parse(JSON.stringify(session))}
-        activeSessions={JSON.parse(JSON.stringify(activeSessions))}
-      />
+      <Suspense fallback={<ProfileSkeleton />}>
+        <UserCard
+          session={serializeForClient(session)}
+          activeSessions={serializeForClient(activeSessions)}
+        />
+      </Suspense>
+    </div>
+  );
+}
+
+// Componente de loading
+function ProfileSkeleton() {
+  return (
+    <div className="w-full">
+      <Skeleton className="h-64" />
     </div>
   );
 }

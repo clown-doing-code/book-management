@@ -2,14 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  DefaultValues,
-  FieldValues,
-  Path,
-  SubmitHandler,
+  type DefaultValues,
+  type FieldValues,
+  type Path,
+  type SubmitHandler,
   useForm,
-  UseFormReturn,
+  type UseFormReturn,
 } from "react-hook-form";
-import { ZodType } from "zod";
+import type { ZodType } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,7 +28,18 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { HelpCircle } from "lucide-react";
 
 //TODO: Update the title and description
 //TODO: Center button icons
@@ -127,7 +138,7 @@ export default function AuthForm<T extends FieldValues>({
     if (isSignIn)
       return "Ingresa para explorar y solicitar libros de nuestra colección digital";
     return currentStep === 1
-      ? "Cuéntanos un poco sobre ti para empezar a pedir libros"
+      ? "Cuéntanos un poco sobre ti para empezar"
       : "Sube tu credencial para que podamos verificar tu identidad";
   };
 
@@ -156,18 +167,10 @@ export default function AuthForm<T extends FieldValues>({
                   <div className="flex items-center justify-center gap-2">
                     <div className="flex items-center gap-2">
                       <div
-                        className={`h-2 w-8 rounded-full ${
-                          currentStep >= 1
-                            ? "bg-primary"
-                            : "bg-muted-foreground"
-                        }`}
+                        className={`h-2 w-8 rounded-full ${currentStep >= 1 ? "bg-primary" : "bg-muted-foreground"}`}
                       />
                       <div
-                        className={`h-2 w-8 rounded-full ${
-                          currentStep >= 2
-                            ? "bg-primary"
-                            : "bg-muted-foreground"
-                        }`}
+                        className={`h-2 w-8 rounded-full ${currentStep >= 2 ? "bg-primary" : "bg-muted-foreground"}`}
                       />
                     </div>
                     <span className="ml-2 text-sm text-white">
@@ -185,12 +188,69 @@ export default function AuthForm<T extends FieldValues>({
                     render={({ field }) => (
                       <FormItem>
                         <div className="grid gap-2">
-                          <FormLabel className="text-white capitalize">
+                          <FormLabel className="flex items-center gap-2 text-white capitalize">
                             {
                               FIELD_NAMES[
                                 field.name as keyof typeof FIELD_NAMES
                               ]
                             }
+                            {field.name === "credentialCard" && (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="link"
+                                    size="sm"
+                                    className="h-auto p-1 text-xs hover:text-white"
+                                  >
+                                    ¿Qué es esto?
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-md">
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      Verificación de identidad
+                                    </DialogTitle>
+                                    <DialogDescription>
+                                      Esta información es necesaria para
+                                      verificar su identidad. No almacenamos los
+                                      datos de su documento y solo se utiliza
+                                      para el proceso de verificación.
+                                    </DialogDescription>
+                                  </DialogHeader>
+                                  <div className="space-y-4 py-4">
+                                    <p>
+                                      Puede utilizar cualquiera de los
+                                      siguientes documentos:
+                                    </p>
+                                    <ul className="list-disc space-y-2 pl-5">
+                                      <li>Documento nacional de identidad</li>
+                                      <li>Licencia de conducir</li>
+                                      <li>Identificación universitaria</li>
+                                      <li>
+                                        Cualquier documento oficial que sirva
+                                        para identificarle
+                                      </li>
+                                    </ul>
+                                    <p className="text-sm text-muted-foreground">
+                                      Su privacidad es importante para nosotros.
+                                      La información proporcionada se utiliza
+                                      únicamente para verificar su identidad y
+                                      no se comparte con terceros.
+                                    </p>
+                                  </div>
+                                  <DialogFooter>
+                                    <DialogClose asChild>
+                                      <Button
+                                        type="button"
+                                        className="text-base"
+                                      >
+                                        Entiendo
+                                      </Button>
+                                    </DialogClose>
+                                  </DialogFooter>
+                                </DialogContent>
+                              </Dialog>
+                            )}
                           </FormLabel>
                           <FormControl>
                             {field.name === "credentialCard" ? (
@@ -231,10 +291,10 @@ export default function AuthForm<T extends FieldValues>({
                       type="button"
                       onClick={handleBack}
                       variant="outline"
-                      className="flex flex-1 items-center justify-center px-6 py-2 text-base font-bold"
+                      className="flex flex-1 items-center justify-center gap-2 px-6 py-2 text-base font-bold"
                       disabled={isLoading}
                     >
-                      <ChevronLeft className="mr-2 h-4 w-4" />
+                      <ChevronLeft className="size-4" />
                       Anterior
                     </Button>
                   )}
@@ -247,23 +307,20 @@ export default function AuthForm<T extends FieldValues>({
                         ? () => form.handleSubmit(handleFormSubmit)()
                         : handleNext
                     }
-                    className={`flex items-center justify-center px-6 py-2 text-base font-bold ${
+                    className={`flex items-center justify-center gap-2 text-base font-bold ${
                       !isSignIn && currentStep > 1 ? "flex-1" : "w-full"
                     }`}
                     disabled={isLoading}
                   >
                     {isLoading ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="size-4 animate-spin" />
                         {isSignIn ? "Iniciando sesión..." : "Registrando..."}
                       </>
                     ) : isSignIn ? (
                       "Iniciar Sesión"
                     ) : currentStep < totalSteps ? (
-                      <>
-                        Siguiente
-                        <ChevronRight className="ml-2 h-4 w-4" />
-                      </>
+                      "Siguiente"
                     ) : (
                       "Registrarse"
                     )}

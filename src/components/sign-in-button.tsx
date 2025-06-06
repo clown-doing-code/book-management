@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { LogIn, User } from "lucide-react";
 import { Session } from "@/lib/auth-types";
 
-export async function SignInButton(props: { session: Session | null }) {
+export function SignInButton(props: { session: Session | null }) {
   const session = props.session;
 
   return (

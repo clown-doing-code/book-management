@@ -12,6 +12,8 @@ import { eq } from "drizzle-orm";
 import { workflowClient } from "@/lib/workflow";
 import config from "@/lib/config";
 
+//FIXME: Verify if the account exist at sign-in. Fix error messages
+
 type ActionResult<T = any> = {
   success: boolean;
   data?: T;
@@ -143,6 +145,31 @@ export const signUp = async (
     return {
       success: false,
       error: "Ocurrió un error inesperado, por favor intenta de nuevo",
+    };
+  }
+};
+
+// Función combinada para obtener ambos datos
+export const getSessionData = async () => {
+  try {
+    const headersList = await headers();
+
+    const [session, activeSessions] = await Promise.all([
+      auth.api.getSession({ headers: headersList }),
+      auth.api.listSessions({ headers: headersList }),
+    ]);
+
+    return {
+      session,
+      activeSessions,
+      isAuthenticated: !!session,
+    };
+  } catch (error) {
+    console.error("Error in getSessionData:", error);
+    return {
+      session: null,
+      activeSessions: [],
+      isAuthenticated: false,
     };
   }
 };

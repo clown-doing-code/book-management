@@ -33,7 +33,7 @@ export const users = pgTable(
       .$defaultFn(() => false)
       .notNull(),
     image: text("image"),
-    credentialId: integer("credential_id").notNull().unique(),
+    credentialId: text("credential_id").notNull().unique(),
     credentialCard: text("credential_card").notNull(),
     status: STATUS_ENUM("status").default("PENDING"),
     role: ROLE_ENUM("role").default("USER"),

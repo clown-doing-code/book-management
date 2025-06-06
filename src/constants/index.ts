@@ -43,16 +43,16 @@ export const adminSideBarLinks = [
 export const FIELD_NAMES = {
   name: "Nombre Completo",
   email: "Correo Electrónico",
-  credentialId: "Número de Identificación Universitaria",
+  credentialId: "Número de Credencial",
   password: "Contraseña",
   confirmPassword: "Confirmar Contraseña",
-  credentialCard: "Subir Tarjeta de Identificación Universitaria",
+  credentialCard: "Subir Documento",
 };
 
 export const FIELD_TYPES = {
   name: "text",
   email: "email",
-  credentialId: "number",
+  credentialId: "text",
   password: "password",
   confirmPassword: "password",
 };

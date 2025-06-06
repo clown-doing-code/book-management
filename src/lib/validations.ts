@@ -4,12 +4,21 @@ export const signUpSchema = z
   .object({
     name: z.string().min(3, { message: "El nombre es requerido" }),
     email: z.string().email({ message: "El correo electrónico no es válido" }),
-    credentialId: z.coerce
-      .number()
-      .min(3, { message: "La credencial universitaria es requerida" }),
+    credentialId: z
+      .string()
+      .transform((val) => val.replace(/\s/g, ""))
+      .refine((val) => /^\d+$/.test(val), {
+        message: "La credencial debe contener solo números",
+      })
+      .refine((val) => val.length >= 8, {
+        message: "La credencial debe tener al menos 8 dígitos",
+      })
+      .refine((val) => val.length <= 15, {
+        message: "La credencial no puede exceder 15 dígitos",
+      }),
     credentialCard: z
       .string()
-      .nonempty({ message: "La identificación universitaria es requerida" }),
+      .nonempty({ message: "La credencial es requerida" }),
     password: z
       .string()
       .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
