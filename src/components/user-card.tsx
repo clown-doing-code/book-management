@@ -27,6 +27,7 @@ import { authClient, signOut, useSession } from "@/lib/auth-client";
 import { UAParser } from "ua-parser-js";
 import ChangePassword from "./change-password-form";
 import EditUserDialog from "./edit-user-dialog";
+import { getInitials } from "@/lib/utils";
 
 //TODO: Arreglar diseño
 
@@ -59,7 +60,7 @@ export default function UserCard(props: {
                   className="object-cover"
                 />
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-xl font-semibold text-white sm:text-lg">
-                  {session?.user.name.charAt(0)}
+                  {getInitials(session?.user.name || "IN")}
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-2 text-center sm:text-left">

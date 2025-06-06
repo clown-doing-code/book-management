@@ -18,12 +18,15 @@ export default async function ProfilePage() {
   }
   return (
     <div className="w-full">
-      <Suspense fallback={<ProfileSkeleton />}>
-        <UserCard
-          session={serializeForClient(session)}
-          activeSessions={serializeForClient(activeSessions)}
-        />
-      </Suspense>
+      <div className="flex flex-col gap-4">
+        {" "}
+        <Suspense fallback={<ProfileSkeleton />}>
+          <UserCard
+            session={serializeForClient(session)}
+            activeSessions={serializeForClient(activeSessions)}
+          />
+        </Suspense>
+      </div>
     </div>
   );
 }

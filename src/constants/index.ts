@@ -1,3 +1,18 @@
+import {
+  BookCopy,
+  BookMarked,
+  Home,
+  LucideIcon,
+  UserPlus,
+  Users,
+} from "lucide-react";
+
+export interface AdminSideBarLink {
+  icon: LucideIcon;
+  url: string;
+  name: string;
+}
+
 export const navigationLinks = [
   {
     href: "/library",
@@ -12,31 +27,31 @@ export const navigationLinks = [
   },
 ];
 
-export const adminSideBarLinks = [
+export const adminSideBarLinks: AdminSideBarLink[] = [
   {
-    img: "/icons/admin/home.svg",
-    route: "/admin",
-    text: "Home",
+    icon: Home,
+    url: "/admin",
+    name: "Inicio",
   },
   {
-    img: "/icons/admin/users.svg",
-    route: "/admin/users",
-    text: "All Users",
+    icon: Users,
+    url: "/admin/users",
+    name: "Usuarios",
   },
   {
-    img: "/icons/admin/book.svg",
-    route: "/admin/books",
-    text: "All Books",
+    icon: BookCopy,
+    url: "/admin/books",
+    name: "Catálogo de libros",
   },
   {
-    img: "/icons/admin/bookmark.svg",
-    route: "/admin/book-requests",
-    text: "Borrow Requests",
+    icon: BookMarked,
+    url: "/admin/book-requests",
+    name: "Solicitudes de préstamo",
   },
   {
-    img: "/icons/admin/user.svg",
-    route: "/admin/account-requests",
-    text: "Account Requests",
+    icon: UserPlus,
+    url: "/admin/account-requests",
+    name: "Solicitudes de registro",
   },
 ];
 
