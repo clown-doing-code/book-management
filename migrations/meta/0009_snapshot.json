@@ -1,6 +1,6 @@
 {
-  "id": "022a47fb-75b3-418c-a7d7-4df2cb0061ea",
-  "prevId": "ffa30fc4-b00f-498d-aae9-5f1fe19d45f2",
+  "id": "f4cf6b5b-2b15-4acd-bcde-54a274d04573",
+  "prevId": "022a47fb-75b3-418c-a7d7-4df2cb0061ea",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -756,7 +756,7 @@
     "public.language": {
       "name": "language",
       "schema": "public",
-      "values": ["EN", "ES"]
+      "values": ["ES", "EN", "FR", "DE", "IT", "PT"]
     },
     "public.role": {
       "name": "role",

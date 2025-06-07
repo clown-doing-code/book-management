@@ -7,6 +7,9 @@ import {
   Users,
 } from "lucide-react";
 
+export const LANGUAGES = ["en", "es", "fr", "de", "it", "pt"] as const;
+export type Language = (typeof LANGUAGES)[number];
+
 export interface AdminSideBarLink {
   icon: LucideIcon;
   url: string;

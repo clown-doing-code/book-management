@@ -1,6 +1,6 @@
 {
-  "id": "022a47fb-75b3-418c-a7d7-4df2cb0061ea",
-  "prevId": "ffa30fc4-b00f-498d-aae9-5f1fe19d45f2",
+  "id": "22154406-3ea8-4cfe-ad55-063c6595ca9b",
+  "prevId": "f4cf6b5b-2b15-4acd-bcde-54a274d04573",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -109,8 +109,12 @@
           "name": "accounts_user_id_users_id_fk",
           "tableFrom": "accounts",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -152,7 +156,7 @@
         },
         "rating": {
           "name": "rating",
-          "type": "integer",
+          "type": "real",
           "primaryKey": false,
           "notNull": true
         },
@@ -213,7 +217,7 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
-          "default": "'ES'"
+          "default": "'es'"
         }
       },
       "indexes": {
@@ -269,7 +273,9 @@
         "books_id_unique": {
           "name": "books_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["id"]
+          "columns": [
+            "id"
+          ]
         }
       },
       "policies": {},
@@ -407,8 +413,12 @@
           "name": "borrow_records_user_id_users_id_fk",
           "tableFrom": "borrow_records",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -416,8 +426,12 @@
           "name": "borrow_records_book_id_books_id_fk",
           "tableFrom": "borrow_records",
           "tableTo": "books",
-          "columnsFrom": ["book_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "book_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -427,7 +441,9 @@
         "borrow_records_id_unique": {
           "name": "borrow_records_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["id"]
+          "columns": [
+            "id"
+          ]
         }
       },
       "policies": {},
@@ -545,8 +561,12 @@
           "name": "sessions_user_id_users_id_fk",
           "tableFrom": "sessions",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -556,7 +576,9 @@
         "sessions_token_unique": {
           "name": "sessions_token_unique",
           "nullsNotDistinct": false,
-          "columns": ["token"]
+          "columns": [
+            "token"
+          ]
         }
       },
       "policies": {},
@@ -669,12 +691,16 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         },
         "users_credential_id_unique": {
           "name": "users_credential_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["credential_id"]
+          "columns": [
+            "credential_id"
+          ]
         }
       },
       "policies": {},
@@ -751,22 +777,39 @@
     "public.borrow_status": {
       "name": "borrow_status",
       "schema": "public",
-      "values": ["BORROWED", "RETURNED"]
+      "values": [
+        "BORROWED",
+        "RETURNED"
+      ]
     },
     "public.language": {
       "name": "language",
       "schema": "public",
-      "values": ["EN", "ES"]
+      "values": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt"
+      ]
     },
     "public.role": {
       "name": "role",
       "schema": "public",
-      "values": ["USER", "ADMIN"]
+      "values": [
+        "USER",
+        "ADMIN"
+      ]
     },
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": ["PENDING", "APPROVED", "REJECTED"]
+      "values": [
+        "PENDING",
+        "APPROVED",
+        "REJECTED"
+      ]
     }
   },
   "schemas": {},

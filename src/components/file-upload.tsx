@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { IKImage, ImageKitProvider, IKUpload } from "imagekitio-next";
+import { IKImage, ImageKitProvider, IKUpload, IKVideo } from "imagekitio-next";
 import config from "@/lib/config";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -232,7 +232,7 @@ const FileUpload = ({
                   ? "Por favor espera mientras procesamos tu archivo"
                   : file?.filePath
                     ? "Haz clic para subir otro archivo"
-                    : `Arrastra y suelta tu ${type} aquí, o haz clic para buscar`}
+                    : `Arrastra y suelta tu ${type} aquí`}
               </p>
             </div>
           </button>
@@ -302,18 +302,28 @@ const FileUpload = ({
               <h4 className={cn("font-medium", styles.text)}>Vista Previa</h4>
             </div>
 
-            {type === "image" && (
+            {type === "image" ? (
               <div className="relative max-h-32 overflow-hidden rounded-md border">
                 <IKImage
+                  alt={file.filePath}
                   path={file.filePath}
                   width={500}
                   height={300}
                   loading={"eager"}
-                  alt={file.filePath}
                   className="h-auto w-full object-cover transition-transform duration-300 hover:scale-105"
                 />
               </div>
-            )}
+            ) : type === "video" ? (
+              <div className="relative max-h-48 overflow-hidden rounded-md border">
+                <IKVideo
+                  path={file.filePath}
+                  controls={true}
+                  width={500}
+                  height={300}
+                  className="max-h-48 w-full rounded-xl"
+                />
+              </div>
+            ) : null}
           </div>
         )}
       </div>

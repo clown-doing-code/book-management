@@ -2,6 +2,8 @@ import React from "react";
 import BookCard from "./book-card";
 import { Book } from "types";
 
+//TODO: Add the Card Focus fx
+
 type Props = {
   title: string;
   books: Book[];

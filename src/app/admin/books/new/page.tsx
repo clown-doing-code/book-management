@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import BookForm from "@/components/admin/book-form";
 
 export default function NewBookPage() {
   return (
@@ -31,7 +32,9 @@ export default function NewBookPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="mt-7 w-full overflow-hidden">Book Form</div>
+            <div className="w-full overflow-hidden">
+              <BookForm />
+            </div>
           </CardContent>
         </Card>
       </section>

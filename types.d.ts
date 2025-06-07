@@ -23,7 +23,7 @@ export interface AuthCredentials {
   credentialCard: string;
 }
 
-interface BookParams {
+export interface BookParams {
   title: string;
   author: string;
   genre: string;
@@ -34,14 +34,10 @@ interface BookParams {
   totalCopies: number;
   videoUrl: string;
   summary: string;
+  language: Language;
 }
 
 interface BorrowBookParams {
   bookId: string;
   userId: string;
-}
-
-export enum Language {
-  ENGLISH = "en",
-  SPANISH = "es",
 }

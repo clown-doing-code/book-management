@@ -9,6 +9,7 @@ import {
   timestamp,
   boolean,
   index,
+  real,
 } from "drizzle-orm/pg-core";
 
 export const STATUS_ENUM = pgEnum("status", [
@@ -21,7 +22,14 @@ export const BORROW_STATUS_ENUM = pgEnum("borrow_status", [
   "BORROWED",
   "RETURNED",
 ]);
-export const LANGUAGE_ENUM = pgEnum("language", ["EN", "ES"]);
+export const LANGUAGE_ENUM = pgEnum("language", [
+  "es",
+  "en",
+  "fr",
+  "de",
+  "it",
+  "pt",
+]);
 
 export const users = pgTable(
   "users",
@@ -45,10 +53,10 @@ export const users = pgTable(
       .$defaultFn(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => ({
+  (table) => [
     // Índice recomendado por Better Auth para el campo email
-    emailIdx: index("users_email_idx").on(table.email),
-  }),
+    index("users_email_idx").on(table.email),
+  ],
 );
 
 export const sessions = pgTable(
@@ -65,16 +73,13 @@ export const sessions = pgTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
   },
-  (table) => ({
+  (table) => [
     // Índices recomendados por Better Auth para userId y token
-    userIdIdx: index("sessions_user_id_idx").on(table.userId),
-    tokenIdx: index("sessions_token_idx").on(table.token),
+    index("sessions_user_id_idx").on(table.userId),
+    index("sessions_token_idx").on(table.token),
     // Índice compuesto para consultas que usen ambos campos
-    userIdTokenIdx: index("sessions_user_id_token_idx").on(
-      table.userId,
-      table.token,
-    ),
-  }),
+    index("sessions_user_id_token_idx").on(table.userId, table.token),
+  ],
 );
 
 export const accounts = pgTable(
@@ -96,10 +101,10 @@ export const accounts = pgTable(
     createdAt: timestamp("created_at").notNull(),
     updatedAt: timestamp("updated_at").notNull(),
   },
-  (table) => ({
+  (table) => [
     // Índice recomendado por Better Auth para userId
-    userIdIdx: index("accounts_user_id_idx").on(table.userId),
-  }),
+    index("accounts_user_id_idx").on(table.userId),
+  ],
 );
 
 export const verifications = pgTable(
@@ -116,10 +121,10 @@ export const verifications = pgTable(
       () => /* @__PURE__ */ new Date(),
     ),
   },
-  (table) => ({
+  (table) => [
     // Índice recomendado por Better Auth para identifier
-    identifierIdx: index("verifications_identifier_idx").on(table.identifier),
-  }),
+    index("verifications_identifier_idx").on(table.identifier),
+  ],
 );
 
 export const books = pgTable(
@@ -129,7 +134,7 @@ export const books = pgTable(
     title: varchar("title", { length: 255 }).notNull(),
     author: varchar("author", { length: 255 }).notNull(),
     genre: text("genre").notNull(),
-    rating: integer("rating").notNull(),
+    rating: real("rating").notNull(),
     coverUrl: text("cover_url").notNull(),
     coverColor: varchar("cover_color", { length: 7 }).notNull(),
     description: text("description").notNull(),
@@ -138,14 +143,14 @@ export const books = pgTable(
     videoUrl: text("video_url").notNull(),
     summary: varchar("summary").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-    language: LANGUAGE_ENUM("language").default("ES"),
+    language: LANGUAGE_ENUM("language").default("es"),
   },
-  (table) => ({
+  (table) => [
     // Índices adicionales para optimizar búsquedas comunes en tu app
-    titleIdx: index("books_title_idx").on(table.title),
-    authorIdx: index("books_author_idx").on(table.author),
-    genreIdx: index("books_genre_idx").on(table.genre),
-  }),
+    index("books_title_idx").on(table.title),
+    index("books_author_idx").on(table.author),
+    index("books_genre_idx").on(table.genre),
+  ],
 );
 
 export const borrowRecords = pgTable(
@@ -166,17 +171,14 @@ export const borrowRecords = pgTable(
     status: BORROW_STATUS_ENUM("status").default("BORROWED").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   },
-  (table) => ({
+  (table) => [
     // Índices para optimizar consultas de préstamos
-    userIdIdx: index("borrow_records_user_id_idx").on(table.userId),
-    bookIdIdx: index("borrow_records_book_id_idx").on(table.bookId),
-    statusIdx: index("borrow_records_status_idx").on(table.status),
+    index("borrow_records_user_id_idx").on(table.userId),
+    index("borrow_records_book_id_idx").on(table.bookId),
+    index("borrow_records_status_idx").on(table.status),
     // Índice compuesto para consultas que busquen préstamos de un usuario específico
-    userIdStatusIdx: index("borrow_records_user_id_status_idx").on(
-      table.userId,
-      table.status,
-    ),
-  }),
+    index("borrow_records_user_id_status_idx").on(table.userId, table.status),
+  ],
 );
 
 export const schema = {
