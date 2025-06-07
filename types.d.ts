@@ -1,5 +1,5 @@
-interface Book {
-  id: number;
+export interface Book {
+  id: string;
   title: string;
   author: string;
   genre: string;
@@ -12,6 +12,7 @@ interface Book {
   videoUrl: string;
   summary: string;
   isLoanedBook?: boolean;
+  createdAt: Date | null;
   language: Language;
 }
 

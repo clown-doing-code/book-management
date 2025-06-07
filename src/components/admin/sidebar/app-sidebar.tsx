@@ -39,8 +39,10 @@ export function AppSidebar({ session, ...props }: AppSidebarProps) {
                   />{" "}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">BookWise</span>
-                  <span className="truncate text-xs">EnteAdrprise</span>
+                  <span className="truncate font-bold">BookWise</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    Panel de Administración
+                  </span>
                 </div>
               </a>
             </SidebarMenuButton>

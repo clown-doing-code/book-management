@@ -1,4 +1,4 @@
-import Header from "@/components/header";
+import Header from "@/components/admin/header";
 import { db } from "@/database/drizzle";
 import { users } from "@/database/schema";
 import { auth } from "@/lib/auth";

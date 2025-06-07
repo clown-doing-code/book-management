@@ -240,7 +240,7 @@ export default function UserCard(props: {
 
       {/* Acciones */}
       <Card className="shadow-sm">
-        <CardFooter className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <CardFooter className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <ChangePassword />
           <Button
             variant="outline"

@@ -1,6 +1,6 @@
 import { getSessionData } from "@/actions/auth-action";
 import { Skeleton } from "@/components/ui/skeleton";
-import UserCard from "@/components/user-card";
+import UserCard from "@/components/auth/user-card";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import {

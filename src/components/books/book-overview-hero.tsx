@@ -1,9 +1,13 @@
 import { Star } from "lucide-react";
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import Image from "next/image";
 import BookCover from "./book-cover";
-import { Book } from "../../types";
+import { Book } from "../../../types";
+
+interface Props extends Book {
+  userId: string;
+}
 
 export default function BookOverview({
   id,
@@ -19,7 +23,8 @@ export default function BookOverview({
   videoUrl,
   summary,
   language,
-}: Book) {
+  userId,
+}: Props) {
   return (
     <section className="flex flex-col-reverse items-center gap-12 sm:gap-32 xl:flex-row xl:gap-8">
       <div className="flex flex-1 flex-col gap-5">

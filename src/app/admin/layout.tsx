@@ -1,25 +1,17 @@
-import { redirect } from "next/navigation";
-import { db } from "@/database/drizzle";
-import { users } from "@/database/schema";
-import { eq } from "drizzle-orm";
 import { getSessionData } from "@/actions/auth-action";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import AdminHeader from "@/components/admin/admin-header";
+import { DynamicBreadcrumb } from "@/components/admin/sidebar/dynamic-breadcrumb";
+import { AppSidebar } from "@/components/admin/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/admin/sidebar/app-sidebar";
-import AdminHeader from "@/components/admin/admin-header";
-import { DynamicBreadcrumb } from "@/components/admin/dynamic-breadcrumb";
+import { db } from "@/database/drizzle";
+import { users } from "@/database/schema";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export default async function AdminLayoyt({
   children,
@@ -30,14 +22,15 @@ export default async function AdminLayoyt({
 
   if (!session?.user?.id) redirect("/auth/sign-in");
 
-  // const isAdmin = await db
-  //   .select({ isAdmin: users.role })
-  //   .from(users)
-  //   .where(eq(users.id, session.user.id))
-  //   .limit(1)
-  //   .then((res) => res[0]?.isAdmin === "ADMIN");
+  const isAdmin = await db
+    .select({ isAdmin: users.role })
+    .from(users)
+    .where(eq(users.id, session.user.id))
+    .limit(1)
+    .then((res) => res[0]?.isAdmin === "ADMIN");
 
-  // if (!isAdmin) redirect("/");
+  if (!isAdmin) redirect("/");
+
   return (
     <SidebarProvider>
       <AppSidebar session={session} />

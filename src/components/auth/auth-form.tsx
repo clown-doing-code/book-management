@@ -22,10 +22,10 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { FIELD_NAMES, FIELD_TYPES } from "@/constants";
-import FileUpload from "./file-upload";
+import FileUpload from "../shared/file-upload";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "./ui/card";
+import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
 import { useState } from "react";
 import { ChevronLeft, Loader2 } from "lucide-react";
@@ -66,7 +66,7 @@ export default function AuthForm<T extends FieldValues>({
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>,
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   // Definir campos para cada paso

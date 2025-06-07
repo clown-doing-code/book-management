@@ -1,40 +1,32 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import type { z } from "zod";
-import { useState } from "react";
 import {
-  Loader2,
   BookOpen,
+  Globe,
+  Loader2,
+  Palette,
   Star,
   Upload,
-  Palette,
   Video,
-  FileText,
-  Globe,
 } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
+import { createBook } from "@/actions/add-book-action";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
-import { bookSchema } from "@/lib/validations";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import type { Book } from "types";
-import FileUpload from "../file-upload";
-import ColorPicker from "./color-picker";
-import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -42,7 +34,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createBook } from "@/actions/add-book-action";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import config from "@/lib/config";
+import { bookSchema } from "@/lib/validations";
+import { IKImage } from "imagekitio-next";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import type { Book } from "types";
+import FileUpload from "../shared/file-upload";
+import ColorPicker from "./ui/color-picker";
+import EyeDropper from "./ui/eye-dropper";
+
+//TODO: test the eye dropper
 
 interface Props extends Partial<Book> {
   type?: "create" | "update";
@@ -70,7 +74,7 @@ const BookForm = ({ type = "create", ...book }: Props) => {
       summary: book.summary || "",
       language: book.language || "es",
     },
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const watchedValues = form.watch();
@@ -402,14 +406,28 @@ const BookForm = ({ type = "create", ...book }: Props) => {
                             Color primario
                           </FormLabel>
                           <FormControl>
-                            <ColorPicker
-                              onPickerChange={field.onChange}
-                              value={field.value}
-                            />
+                            <div className="space-y-3">
+                              <ColorPicker
+                                onPickerChange={field.onChange}
+                                value={field.value}
+                              />
+
+                              {/* Eye Dropper Component */}
+                              {watchedValues.coverUrl && (
+                                <div className="border-t pt-2">
+                                  <p className="mb-2 text-xs text-muted-foreground">
+                                    O extrae un color directamente de la
+                                    portada:
+                                  </p>
+                                  <EyeDropper
+                                    imageUrl={watchedValues.coverUrl}
+                                    onColorPicked={field.onChange}
+                                  />
+                                </div>
+                              )}
+                            </div>
                           </FormControl>
-                          <FormDescription>
-                            Color que representa el libro en la interfaz
-                          </FormDescription>
+
                           <FormMessage />
                         </FormItem>
                       )}
@@ -465,10 +483,13 @@ const BookForm = ({ type = "create", ...book }: Props) => {
               <div className="space-y-4">
                 {watchedValues.coverUrl && (
                   <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
-                    <img
-                      src={watchedValues.coverUrl || "/placeholder.svg"}
-                      alt="Portada"
-                      className="h-full w-full object-cover"
+                    <IKImage
+                      path={watchedValues.coverUrl || "/placeholder.svg"}
+                      urlEndpoint={config.env.imagekit.urlEndpoint}
+                      alt="Book Cover"
+                      className="relative h-full w-full object-cover"
+                      fill
+                      loading="lazy"
                     />
                   </div>
                 )}

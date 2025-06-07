@@ -22,13 +22,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PasswordInput } from "./ui/password-input";
-import { Button } from "./ui/button";
+import { PasswordInput } from "../ui/password-input";
+import { Button } from "../ui/button";
 import { Key, Loader2, Siren } from "lucide-react";
-import { Checkbox } from "./ui/checkbox";
+import { Checkbox } from "../ui/checkbox";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 // Zod validation schema
 const changePasswordSchema = z
@@ -61,7 +61,7 @@ export default function ChangePassword() {
       confirmPassword: "",
       signOutDevices: false,
     },
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const {

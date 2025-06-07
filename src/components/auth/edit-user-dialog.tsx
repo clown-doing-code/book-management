@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Edit, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";

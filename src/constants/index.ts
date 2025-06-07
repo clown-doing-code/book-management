@@ -77,7 +77,7 @@ export const FIELD_TYPES = {
 
 export const sampleBooks = [
   {
-    id: 1,
+    id: "1",
     title: "La Biblioteca de la Medianoche",
     author: "Matt Haig",
     genre: "Fantasía / Ficción",
